@@ -1,23 +1,31 @@
 import {useDropzone} from 'react-dropzone';
 import { DefaultApi } from '../api';
-
 import { Configuration } from '../api';
+
+import { useEffect } from 'react';
 
 const config = new Configuration({ basePath: "http://localhost:8000" });
 const api = new DefaultApi(config);
 
 function UploadDialog() {
   const {acceptedFiles, getRootProps, getInputProps} = useDropzone();
+
+  async function uploadFile(file: File) {
+    const response = await api.uploadFileUploadPost(file);
+    console.log(response);
+  }  
   
   const files = acceptedFiles.map(file => (
     <li key={file.path}>
       {file.path} - {file.size} bytes
     </li>
   ));
-  //for every file, call the uploadFile function
-  acceptedFiles.forEach(file => {
-    uploadFile(file);
-  });
+
+  useEffect(() => {
+    acceptedFiles.forEach(file => {
+      uploadFile(file);
+    });
+  }, [acceptedFiles]);
 
   return (
     <section className="container">
@@ -31,11 +39,6 @@ function UploadDialog() {
       </aside>
     </section>
   );
-}
-
-async function uploadFile(file: File) {
-  const response = await api.uploadFileUploadPost(file);
-  console.log(response);
 }
 
 export default UploadDialog;
