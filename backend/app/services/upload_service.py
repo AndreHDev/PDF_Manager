@@ -5,6 +5,7 @@ from fastapi import UploadFile, File
 TEMP_STORAGE = {}
 
 async def upload_file(file: UploadFile = File(...)):
+    print("upload_file")
     file_id = str(uuid.uuid4())
     file_path = f"temp/{file_id}.pdf"
 

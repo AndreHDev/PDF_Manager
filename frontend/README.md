@@ -50,3 +50,4 @@ export default tseslint.config({
 ```
 
 npm run dev
+openapi-generator-cli generate -i ../openapi/openapi.json -g typescript-axios -o src/api
