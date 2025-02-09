@@ -18,6 +18,7 @@ function UploadDialog() {
     </li>
   ));
 
+  // Upload files one by one
   useEffect(() => {
     acceptedFiles.forEach(file => {
       uploadFile(file);
