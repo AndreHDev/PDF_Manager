@@ -4,11 +4,9 @@ from model import PDF_Model
 from services.upload_service import upload_file
 from services.thumbnail_service import get_all_thumbnails_for_file
 
-model = PDF_Model()
 app = FastAPI()
 
-# Get all pages API call (just images?)
-# Convert uploades pdfs to pages 
+model = PDF_Model()
 
 app.add_middleware(
     CORSMiddleware,
