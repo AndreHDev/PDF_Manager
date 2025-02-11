@@ -1,5 +1,8 @@
 from PyPDF2 import PdfReader
 from pdf2image import convert_from_path
+import base64
+from io import BytesIO
+import os
 
 class PDF():
     def __init__(self, id, path):
@@ -48,12 +51,15 @@ class PDF_Model():
         self.add_pdf(new_pdf)
         print(f"pdfs: {self._pdfs}")
 
-    def get_thumbnails(self, pdf_file_path):
+    def get_thumbnails(self, file_path):
         try:
-            all_pages = convert_from_path(pdf_file_path, size=(150, 200))
+            all_pages = convert_from_path(file_path, size=(150, 200))
             thumbnails = []
             for page in all_pages:
-                thumbnails.append(page)
+                buffered = BytesIO()
+                page.save(buffered, format="PNG")
+                img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
+                thumbnails.append(f"data:image/png;base64,{img_str}")
             return thumbnails
         except Exception as e:
             print(f"An error occurred while trying to make the thumbnails: {e}")
