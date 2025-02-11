@@ -1,16 +1,14 @@
 
-import { useEffect } from 'react';
+import { useEffect} from 'react';
 import {useDropzone} from 'react-dropzone';
 import { api } from '../api/myApi';
 
+interface IProps {
+  onUploadSuccess: (fileId: string) => void;
+}
 
-function UploadDialog() {
+function UploadDialog({onUploadSuccess}: IProps) {
   const {acceptedFiles, getRootProps, getInputProps} = useDropzone();
-
-  async function uploadFile(file: File) {
-    const response = await api.uploadFileUploadPost(file);
-    console.log(response);
-  }  
   
   const files = acceptedFiles.map(file => (
     <li key={file.path}>
@@ -18,13 +16,27 @@ function UploadDialog() {
     </li>
   ));
 
-  // Upload files one by one
   useEffect(() => {
+    
+    const uploadFile = async (file:File) => {
+      try {
+        const response = await api.uploadFileUploadPost(file);
+        console.log(response);
+        if (response.data && response.data.file_id) {
+          onUploadSuccess(response.data.file_id);
+        }
+      } catch (error) {
+        console.error('Error uploading files:', error);
+      }
+    }
+
     acceptedFiles.forEach(file => {
       uploadFile(file);
     });
-  }, [acceptedFiles]);
 
+  }, [acceptedFiles, onUploadSuccess]);
+
+  
   return (
     <section className="container">
       <div {...getRootProps({className: 'dropzone'})}>
