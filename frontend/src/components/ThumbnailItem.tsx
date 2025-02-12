@@ -12,7 +12,7 @@ const ThumbnailItem = ({ page, onDragStart, onCheckboxChange }: ThumbnailItemPro
 
     return (
         <div
-        className="thumbnail-item"
+        className="bg-custom-dark"
         draggable
         onDragStart={(event) => onDragStart(event, pageNumber)}
         >

@@ -68,7 +68,7 @@ const ThumbnailGrid = ({ fileIds }: IProps) => {
     }
 
     return (
-      <div className="grid grid-cols-3 gap-4 mt-4">
+      <div className="grid grid-cols-5 gap-4 mt-4 bg-custom-dark p-4">
       {pages.map((page, index) => (
         <ThumbnailItem
           key={index}
