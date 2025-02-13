@@ -8,7 +8,7 @@ interface ThumbnailItemProps {
 }
 
 const ThumbnailItem = ({ page, onDragStart, onCheckboxChange }: ThumbnailItemProps) => {
-    const { thumbnail, pageNumber } = page;
+    const { fileId, thumbnail, pageNumber } = page;
 
     return (
         <div
@@ -19,7 +19,7 @@ const ThumbnailItem = ({ page, onDragStart, onCheckboxChange }: ThumbnailItemPro
         <img src={thumbnail} alt={`Thumbnail ${pageNumber}`} className="w-full h-auto rounded-lg" onError={(e) => console.log('Image failed to load:', thumbnail, e)} />
         <input
             type="checkbox"
-            onChange={(e) => onCheckboxChange(thumbnail, e.target.checked)}
+            onChange={(e) => onCheckboxChange(fileId, e.target.checked)}
         />
         </div>
     );

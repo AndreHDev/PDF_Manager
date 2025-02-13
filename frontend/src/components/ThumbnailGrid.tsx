@@ -4,6 +4,7 @@ import { api } from '../api/myApi';
 import ThumbnailItem from './ThumbnailItem';
 
 export interface Page {
+  fileId: string;
   thumbnail: string;
   pageNumber: number;
   checked: boolean;
@@ -14,7 +15,6 @@ interface IProps {
 }
 
 const ThumbnailGrid = ({ fileIds }: IProps) => {
-    const [thumbnails, setThumbnails] = useState<string[]>([]);
     const [pages, setPages] = useState<Page[]>([]);
   
     useEffect(() => {
@@ -23,9 +23,24 @@ const ThumbnailGrid = ({ fileIds }: IProps) => {
         const fetchThumbnails = async () => {
         try {
           for (const fileId of fileIds) {
+            // check if thumbnails are already loaded
+            if (pages.some(page => page.fileId === fileId)) {
+              console.log("Thumbnails already loaded for file", fileId);
+              continue;
+            }
+
             const response = await api.getAllThumbnailsForFileThumbnailsFileIdGet(fileId);
-            console.log("Thumbnails for file", fileId, response.data.thumbnails);
-            setThumbnails(prevThumbnails => [...prevThumbnails, ...response.data.thumbnails]);
+            console.log("Receiveid thumbnails for file", fileId, response.data.thumbnails);
+            
+            setPages((prevPages: Page[]) => [
+              ...prevPages,
+              ...response.data.thumbnails.map((thumbnail: string, index: number) => ({
+              fileId,
+              thumbnail,
+              pageNumber: index,
+              checked: true
+              }))
+            ]);
           }
         } catch (error) {
           console.error("Failed to load thumbnails", error);
@@ -34,15 +49,9 @@ const ThumbnailGrid = ({ fileIds }: IProps) => {
   
       fetchThumbnails();
 
-    }, [fileIds]);
+    }, [fileIds, pages]);
 
-    useEffect(() => {
-      setPages(thumbnails.map((thumbnail, index) => ({
-        thumbnail,
-        pageNumber: index + 1,
-        checked: true
-      })));
-    }, [thumbnails]);
+    console.log("Pages", pages);
 
     const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
       event.preventDefault();
@@ -53,11 +62,10 @@ const ThumbnailGrid = ({ fileIds }: IProps) => {
       event.dataTransfer.setData("text/plain", pageNumber.toString());
     }
 
-    const handleCheckboxChange = (thumbnail: string, checked: boolean) => {
+    const handleCheckboxChange = (fileId: string, checked: boolean) => {
       // Search for given page and update its checked status
-      // TODO: Probably should use an ID here
       setPages(prevPages => prevPages.map(page => {
-        if (page.thumbnail === thumbnail) {
+        if (page.fileId === fileId) {
           return {
             ...page,
             checked
