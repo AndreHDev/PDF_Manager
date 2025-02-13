@@ -16,7 +16,7 @@ interface IProps {
 
 const ThumbnailGrid = ({ fileIds }: IProps) => {
     const [pages, setPages] = useState<Page[]>([]);
-    const [draggedPage, setDraggedPage] = useState<string | null>(null);
+    const [draggedPage, setDraggedPage] = useState<{ fileId: string, pageNumber: number } | null>(null);
 
     useEffect(() => {
       if (fileIds.length === 0) return;
@@ -68,27 +68,51 @@ const ThumbnailGrid = ({ fileIds }: IProps) => {
     }
 
     const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+      console.log("Drop event", event);
       event.preventDefault();
-      const targetFileId = event.dataTransfer.getData("text/plain");
-      if (draggedPage !== targetFileId) {
-        setPages(prevPages => {
-          const updatedPages = [...prevPages];
-          // Find the index of the dragged page and the target page
-          const draggedPageIndex = updatedPages.findIndex(page => page.fileId === draggedPage);
-          const targetPageIndex = updatedPages.findIndex(page => page.fileId === targetFileId);
-          // Swap the pages
-          if (draggedPageIndex !== -1 && targetPageIndex !== -1) {
-            const temp = updatedPages[draggedPageIndex];
-            updatedPages[draggedPageIndex] = updatedPages[targetPageIndex];
-            updatedPages[targetPageIndex] = temp;
-          }
-          return updatedPages;
-        });
-    }}
 
-    const handleDragStart = (event: React.DragEvent<HTMLDivElement>, fileId: string) => {
-      event.dataTransfer.setData("text/plain", fileId);
-      setDraggedPage(fileId);
+      // Get the drop target from event
+      const targetElement = (event.target as Element).closest("[data-file-id][data-page-number]");
+
+      if (!draggedPage || !targetElement) {
+        console.log("Invalid drop target or no dragged page.");
+        return;
+      }
+      
+      const targetFileId = targetElement.getAttribute("data-file-id");
+      const targetPageNumber = parseInt(targetElement.getAttribute("data-page-number") || "-1", 10);
+      console.log("Target file ID", targetFileId, "Target page number", targetPageNumber, "Dragged page", draggedPage);
+
+      if (!targetFileId || targetPageNumber === -1) {
+        console.log("Invalid target file ID or page number");
+        return;
+      }
+
+      if (draggedPage.fileId === targetFileId && draggedPage.pageNumber === targetPageNumber) {
+        console.log("Same page, no need to move");
+        return;
+      }
+
+      setPages((prevPages) => {
+        const updatedPages = [...prevPages];
+  
+        // Find the indexes of the dragged and target pages
+        const draggedPageIndex = updatedPages.findIndex(page => page.fileId === draggedPage.fileId && page.pageNumber === draggedPage.pageNumber);
+        const targetPageIndex = updatedPages.findIndex(page => page.fileId === targetFileId && page.pageNumber === targetPageNumber);
+  
+        // Swap the pages
+        if (draggedPageIndex !== -1 && targetPageIndex !== -1) {
+          [updatedPages[draggedPageIndex], updatedPages[targetPageIndex]] = [updatedPages[targetPageIndex], updatedPages[draggedPageIndex]];
+        }
+  
+        return updatedPages;
+      });
+
+    }
+
+    const handleDragStart = (event: React.DragEvent<HTMLDivElement>, fileId: string, pageNumber: number) => {
+      console.log("Drag start", fileId, "Page: ", pageNumber, event);
+      setDraggedPage({ fileId, pageNumber });
     }
 
     return (
