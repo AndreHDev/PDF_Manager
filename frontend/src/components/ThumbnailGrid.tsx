@@ -16,7 +16,8 @@ interface IProps {
 
 const ThumbnailGrid = ({ fileIds }: IProps) => {
     const [pages, setPages] = useState<Page[]>([]);
-  
+    const [draggedPage, setDraggedPage] = useState<string | null>(null);
+
     useEffect(() => {
       if (fileIds.length === 0) return;
       
@@ -51,21 +52,12 @@ const ThumbnailGrid = ({ fileIds }: IProps) => {
 
     }, [fileIds, pages]);
 
-    console.log("Pages", pages);
+    console.log("Current Pages: ", pages);
 
-    const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
-      event.preventDefault();
-      return;
-    }
-
-    const handleDragStart = (event: React.DragEvent<HTMLDivElement>, pageNumber: number) => {
-      event.dataTransfer.setData("text/plain", pageNumber.toString());
-    }
-
-    const handleCheckboxChange = (fileId: string, checked: boolean) => {
+    const handleCheckboxChange = (fileId: string, pageNumber: number, checked: boolean) => {
       // Search for given page and update its checked status
       setPages(prevPages => prevPages.map(page => {
-        if (page.fileId === fileId) {
+        if (page.fileId === fileId && page.pageNumber === pageNumber) {
           return {
             ...page,
             checked
@@ -75,8 +67,32 @@ const ThumbnailGrid = ({ fileIds }: IProps) => {
       }));
     }
 
+    const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+      event.preventDefault();
+      const targetFileId = event.dataTransfer.getData("text/plain");
+      if (draggedPage !== targetFileId) {
+        setPages(prevPages => {
+          const updatedPages = [...prevPages];
+          // Find the index of the dragged page and the target page
+          const draggedPageIndex = updatedPages.findIndex(page => page.fileId === draggedPage);
+          const targetPageIndex = updatedPages.findIndex(page => page.fileId === targetFileId);
+          // Swap the pages
+          if (draggedPageIndex !== -1 && targetPageIndex !== -1) {
+            const temp = updatedPages[draggedPageIndex];
+            updatedPages[draggedPageIndex] = updatedPages[targetPageIndex];
+            updatedPages[targetPageIndex] = temp;
+          }
+          return updatedPages;
+        });
+    }}
+
+    const handleDragStart = (event: React.DragEvent<HTMLDivElement>, fileId: string) => {
+      event.dataTransfer.setData("text/plain", fileId);
+      setDraggedPage(fileId);
+    }
+
     return (
-      <div className="grid grid-cols-5 gap-4 mt-4 bg-custom-dark p-4">
+      <div className="grid grid-cols-5 gap-4 mt-4 bg-custom-dark p-4" onDrop={handleDrop} onDragOver={(e) => e.preventDefault()}>
       {pages.map((page, index) => (
         <ThumbnailItem
           key={index}
