@@ -1,72 +1,23 @@
-import { useEffect, useState } from 'react';
-import { api } from '../api/myApi';
+import { useState } from 'react';
+import type { Page } from '../api/api';
 //import { createCanvas, loadImage } from 'canvas';
 import ThumbnailItem from './ThumbnailItem';
-import MergeButton from './MergeButtom';
 
-export interface Page {
-  fileId: string;
-  thumbnail: string;
-  pageNumber: number;
-  checked: boolean;
-}
 
 interface IProps {
-    fileIds: string[];
+    pages: Page[];
+    onCheckBoxChange: (fileId: string, pageNumber: number, checked: boolean ) => void;
+    swapPages: (draggedPage: { fileId: string, pageNumber: number }, targetPage: { fileId: string, pageNumber: number }) => void;
 }
 
-const ThumbnailGrid = ({ fileIds }: IProps) => {
-    const [pages, setPages] = useState<Page[]>([]);
+const ThumbnailGrid = ({ pages, onCheckBoxChange, swapPages }: IProps) => {
+
     const [draggedPage, setDraggedPage] = useState<{ fileId: string, pageNumber: number } | null>(null);
-
-    useEffect(() => {
-      if (fileIds.length === 0) return;
-      
-        const fetchThumbnails = async () => {
-        try {
-          for (const fileId of fileIds) {
-            // Check if a page has already been loaded
-            if (pages.some(page => page.fileId === fileId)) {
-              console.log("Thumbnails already loaded for file", fileId);
-              continue;
-            }
-
-            const response = await api.getAllThumbnailsForFileThumbnailsGet(fileId);
-            console.log("Receiveid thumbnails for file", fileId, response.data.thumbnails);
-            
-            // Append new page
-            setPages((prevPages: Page[]) => [
-              ...prevPages,
-              ...response.data.thumbnails.map((thumbnail: string, index: number) => ({
-              fileId,
-              thumbnail,
-              pageNumber: index,
-              checked: true
-              }))
-            ]);
-          }
-        } catch (error) {
-          console.error("Failed to load thumbnails", error);
-        }
-      };
-  
-      fetchThumbnails();
-
-    }, [fileIds, pages]);
 
     console.log("Current Pages: ", pages);
 
     const handleCheckboxChange = (fileId: string, pageNumber: number, checked: boolean) => {
-      // Search for given page and update its checked status
-      setPages(prevPages => prevPages.map(page => {
-        if (page.fileId === fileId && page.pageNumber === pageNumber) {
-          return {
-            ...page,
-            checked
-          };
-        }
-        return page;
-      }));
+      onCheckBoxChange(fileId, pageNumber, checked);
     }
 
     const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
@@ -95,21 +46,8 @@ const ThumbnailGrid = ({ fileIds }: IProps) => {
         return;
       }
 
-      setPages((prevPages) => {
-        const updatedPages = [...prevPages];
-  
-        // Find the indexes of the dragged and target pages
-        const draggedPageIndex = updatedPages.findIndex(page => page.fileId === draggedPage.fileId && page.pageNumber === draggedPage.pageNumber);
-        const targetPageIndex = updatedPages.findIndex(page => page.fileId === targetFileId && page.pageNumber === targetPageNumber);
-  
-        // Swap the pages
-        if (draggedPageIndex !== -1 && targetPageIndex !== -1) {
-          [updatedPages[draggedPageIndex], updatedPages[targetPageIndex]] = [updatedPages[targetPageIndex], updatedPages[draggedPageIndex]];
-        }
-  
-        return updatedPages;
-      });
-
+      // Swap pages
+      swapPages(draggedPage, { fileId: targetFileId, pageNumber: targetPageNumber });
     }
 
     const handleDragStart = (event: React.DragEvent<HTMLDivElement>, fileId: string, pageNumber: number) => {
@@ -128,7 +66,6 @@ const ThumbnailGrid = ({ fileIds }: IProps) => {
           onCheckboxChange={handleCheckboxChange}
         />
       ))}
-      <MergeButton pages={pages} />
     </div>
     );
   };

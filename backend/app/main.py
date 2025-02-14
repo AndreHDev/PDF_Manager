@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from model import PDF_Model
-from routers import files
+from router import fileRouter
 
 app = FastAPI()
 
@@ -15,4 +15,4 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(files.router)
+app.include_router(fileRouter)

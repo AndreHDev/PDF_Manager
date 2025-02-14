@@ -2,9 +2,10 @@
 import { useEffect} from 'react';
 import {useDropzone} from 'react-dropzone';
 import { api } from '../api/myApi';
+import type { Page } from '../api/api';
 
 interface IProps {
-  onUploadSuccess: (fileId: string) => void;
+  onUploadSuccess: (page: Page[] ) => void;
 }
 
 function UploadDialog({onUploadSuccess}: IProps) {
@@ -22,8 +23,8 @@ function UploadDialog({onUploadSuccess}: IProps) {
       try {
         const response = await api.uploadFileUploadPost(file);
         console.log(response);
-        if (response.data && response.data.file_id) {
-          onUploadSuccess(response.data.file_id);
+        if (response.data && response.data) {
+          onUploadSuccess(response.data);
         }
       } catch (error) {
         console.error('Error uploading files:', error);

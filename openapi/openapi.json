@@ -13,49 +13,16 @@
      "content": {
       "application/json": {
        "schema": {
-        "$ref": "#/components/schemas/MergePDFRequest"
+        "items": {
+         "$ref": "#/components/schemas/Page"
+        },
+        "type": "array",
+        "title": "Request"
        }
       }
      },
      "required": true
     },
-    "responses": {
-     "200": {
-      "description": "Successful Response",
-      "content": {
-       "application/json": {
-        "schema": {}
-       }
-      }
-     },
-     "422": {
-      "description": "Validation Error",
-      "content": {
-       "application/json": {
-        "schema": {
-         "$ref": "#/components/schemas/HTTPValidationError"
-        }
-       }
-      }
-     }
-    }
-   }
-  },
-  "/thumbnails": {
-   "get": {
-    "summary": "Get All Thumbnails For File",
-    "operationId": "get_all_thumbnails_for_file_thumbnails_get",
-    "parameters": [
-     {
-      "name": "file_id",
-      "in": "query",
-      "required": true,
-      "schema": {
-       "type": "string",
-       "title": "File Id"
-      }
-     }
-    ],
     "responses": {
      "200": {
       "description": "Successful Response",
@@ -97,7 +64,13 @@
       "description": "Successful Response",
       "content": {
        "application/json": {
-        "schema": {}
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/Page"
+         },
+         "type": "array",
+         "title": "Response Upload File Upload Post"
+        }
        }
       }
      },
@@ -131,27 +104,6 @@
     ],
     "title": "Body_upload_file_upload_post"
    },
-   "FilePages": {
-    "properties": {
-     "file_id": {
-      "type": "string",
-      "title": "File Id"
-     },
-     "pages": {
-      "items": {
-       "type": "integer"
-      },
-      "type": "array",
-      "title": "Pages"
-     }
-    },
-    "type": "object",
-    "required": [
-     "file_id",
-     "pages"
-    ],
-    "title": "FilePages"
-   },
    "HTTPValidationError": {
     "properties": {
      "detail": {
@@ -165,21 +117,33 @@
     "type": "object",
     "title": "HTTPValidationError"
    },
-   "MergePDFRequest": {
+   "Page": {
     "properties": {
-     "files": {
-      "items": {
-       "$ref": "#/components/schemas/FilePages"
-      },
-      "type": "array",
-      "title": "Files"
+     "file_id": {
+      "type": "string",
+      "title": "File Id"
+     },
+     "page_number": {
+      "type": "integer",
+      "title": "Page Number"
+     },
+     "thumbnail": {
+      "type": "string",
+      "title": "Thumbnail"
+     },
+     "checked": {
+      "type": "boolean",
+      "title": "Checked",
+      "default": true
      }
     },
     "type": "object",
     "required": [
-     "files"
+     "file_id",
+     "page_number",
+     "thumbnail"
     ],
-    "title": "MergePDFRequest"
+    "title": "Page"
    },
    "ValidationError": {
     "properties": {

@@ -26,25 +26,6 @@ import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerM
 /**
  * 
  * @export
- * @interface FilePages
- */
-export interface FilePages {
-    /**
-     * 
-     * @type {string}
-     * @memberof FilePages
-     */
-    'file_id': string;
-    /**
-     * 
-     * @type {Array<number>}
-     * @memberof FilePages
-     */
-    'pages': Array<number>;
-}
-/**
- * 
- * @export
  * @interface HTTPValidationError
  */
 export interface HTTPValidationError {
@@ -58,15 +39,33 @@ export interface HTTPValidationError {
 /**
  * 
  * @export
- * @interface MergePDFRequest
+ * @interface Page
  */
-export interface MergePDFRequest {
+export interface Page {
     /**
      * 
-     * @type {Array<FilePages>}
-     * @memberof MergePDFRequest
+     * @type {string}
+     * @memberof Page
      */
-    'files': Array<FilePages>;
+    'file_id': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof Page
+     */
+    'page_number': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof Page
+     */
+    'thumbnail': string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Page
+     */
+    'checked'?: boolean;
 }
 /**
  * 
@@ -109,51 +108,14 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
     return {
         /**
          * 
-         * @summary Get All Thumbnails For File
-         * @param {string} fileId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getAllThumbnailsForFileThumbnailsGet: async (fileId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'fileId' is not null or undefined
-            assertParamExists('getAllThumbnailsForFileThumbnailsGet', 'fileId', fileId)
-            const localVarPath = `/thumbnails`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (fileId !== undefined) {
-                localVarQueryParameter['file_id'] = fileId;
-            }
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
          * @summary Merge Pdfs
-         * @param {MergePDFRequest} mergePDFRequest 
+         * @param {Array<Page>} page 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        mergePdfsMergePost: async (mergePDFRequest: MergePDFRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'mergePDFRequest' is not null or undefined
-            assertParamExists('mergePdfsMergePost', 'mergePDFRequest', mergePDFRequest)
+        mergePdfsMergePost: async (page: Array<Page>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'page' is not null or undefined
+            assertParamExists('mergePdfsMergePost', 'page', page)
             const localVarPath = `/merge`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -173,7 +135,7 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(mergePDFRequest, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(page, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -233,26 +195,13 @@ export const DefaultApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
-         * @summary Get All Thumbnails For File
-         * @param {string} fileId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getAllThumbnailsForFileThumbnailsGet(fileId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllThumbnailsForFileThumbnailsGet(fileId, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['DefaultApi.getAllThumbnailsForFileThumbnailsGet']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
          * @summary Merge Pdfs
-         * @param {MergePDFRequest} mergePDFRequest 
+         * @param {Array<Page>} page 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async mergePdfsMergePost(mergePDFRequest: MergePDFRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.mergePdfsMergePost(mergePDFRequest, options);
+        async mergePdfsMergePost(page: Array<Page>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.mergePdfsMergePost(page, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['DefaultApi.mergePdfsMergePost']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -264,7 +213,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async uploadFileUploadPost(file: File, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
+        async uploadFileUploadPost(file: File, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Page>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.uploadFileUploadPost(file, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['DefaultApi.uploadFileUploadPost']?.[localVarOperationServerIndex]?.url;
@@ -282,23 +231,13 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
     return {
         /**
          * 
-         * @summary Get All Thumbnails For File
-         * @param {string} fileId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getAllThumbnailsForFileThumbnailsGet(fileId: string, options?: RawAxiosRequestConfig): AxiosPromise<any> {
-            return localVarFp.getAllThumbnailsForFileThumbnailsGet(fileId, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
          * @summary Merge Pdfs
-         * @param {MergePDFRequest} mergePDFRequest 
+         * @param {Array<Page>} page 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        mergePdfsMergePost(mergePDFRequest: MergePDFRequest, options?: RawAxiosRequestConfig): AxiosPromise<any> {
-            return localVarFp.mergePdfsMergePost(mergePDFRequest, options).then((request) => request(axios, basePath));
+        mergePdfsMergePost(page: Array<Page>, options?: RawAxiosRequestConfig): AxiosPromise<any> {
+            return localVarFp.mergePdfsMergePost(page, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -307,7 +246,7 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        uploadFileUploadPost(file: File, options?: RawAxiosRequestConfig): AxiosPromise<any> {
+        uploadFileUploadPost(file: File, options?: RawAxiosRequestConfig): AxiosPromise<Array<Page>> {
             return localVarFp.uploadFileUploadPost(file, options).then((request) => request(axios, basePath));
         },
     };
@@ -322,26 +261,14 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
 export class DefaultApi extends BaseAPI {
     /**
      * 
-     * @summary Get All Thumbnails For File
-     * @param {string} fileId 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof DefaultApi
-     */
-    public getAllThumbnailsForFileThumbnailsGet(fileId: string, options?: RawAxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).getAllThumbnailsForFileThumbnailsGet(fileId, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
      * @summary Merge Pdfs
-     * @param {MergePDFRequest} mergePDFRequest 
+     * @param {Array<Page>} page 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public mergePdfsMergePost(mergePDFRequest: MergePDFRequest, options?: RawAxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).mergePdfsMergePost(mergePDFRequest, options).then((request) => request(this.axios, this.basePath));
+    public mergePdfsMergePost(page: Array<Page>, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).mergePdfsMergePost(page, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

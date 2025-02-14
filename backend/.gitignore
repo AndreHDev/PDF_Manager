@@ -2,3 +2,4 @@ app/temp
 __pycache__/
 **/__pycache__/
 outputs/
+*.pdf

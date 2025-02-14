@@ -1,5 +1,5 @@
 import React from 'react';
-import type {Page} from "./ThumbnailGrid"
+import type { Page } from '../api/api';
 
 interface ThumbnailItemProps {
   page: Page;
@@ -8,21 +8,21 @@ interface ThumbnailItemProps {
 }
 
 const ThumbnailItem = ({ page, onDragStart, onCheckboxChange }: ThumbnailItemProps) => {
-    const { fileId, thumbnail, pageNumber, checked } = page;
+    const { file_id, thumbnail, page_number, checked } = page;
 
     return (
         <div
         className="bg-custom-dark"
         draggable
-        data-file-id={page.fileId} 
-        data-page-number={page.pageNumber}
-        onDragStart={(event) => onDragStart(event, fileId, pageNumber)}
+        data-file-id={page.file_id} 
+        data-page-number={page.page_number}
+        onDragStart={(event) => onDragStart(event, file_id, page_number)}
         >
-        <img src={thumbnail} alt={`Thumbnail ${pageNumber}`} className="w-full h-auto rounded-lg" onError={(e) => console.log('Image failed to load:', thumbnail, e)} />
+        <img src={thumbnail} alt={`Thumbnail ${page_number}`} className="w-full h-auto rounded-lg" onError={(e) => console.log('Image failed to load:', thumbnail, e)} />
         <input
             type="checkbox"
             checked={checked}
-            onChange={(e) => onCheckboxChange(fileId, pageNumber, e.target.checked)}
+            onChange={(e) => onCheckboxChange(file_id, page_number, e.target.checked)}
         />
         </div>
     );
