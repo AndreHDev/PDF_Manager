@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { api } from '../api/myApi';
 //import { createCanvas, loadImage } from 'canvas';
 import ThumbnailItem from './ThumbnailItem';
+import MergeButton from './MergeButtom';
 
 export interface Page {
   fileId: string;
@@ -24,7 +25,7 @@ const ThumbnailGrid = ({ fileIds }: IProps) => {
         const fetchThumbnails = async () => {
         try {
           for (const fileId of fileIds) {
-            // check if thumbnails are already loaded
+            // Check if a page has already been loaded
             if (pages.some(page => page.fileId === fileId)) {
               console.log("Thumbnails already loaded for file", fileId);
               continue;
@@ -33,6 +34,7 @@ const ThumbnailGrid = ({ fileIds }: IProps) => {
             const response = await api.getAllThumbnailsForFileThumbnailsFileIdGet(fileId);
             console.log("Receiveid thumbnails for file", fileId, response.data.thumbnails);
             
+            // Append new page
             setPages((prevPages: Page[]) => [
               ...prevPages,
               ...response.data.thumbnails.map((thumbnail: string, index: number) => ({
@@ -115,6 +117,7 @@ const ThumbnailGrid = ({ fileIds }: IProps) => {
       setDraggedPage({ fileId, pageNumber });
     }
 
+    //TODO: Check button communication for a better way and move it under the grid
     return (
       <div className="grid grid-cols-5 gap-4 mt-4 bg-custom-dark p-4" onDrop={handleDrop} onDragOver={(e) => e.preventDefault()}>
       {pages.map((page, index) => (
@@ -125,6 +128,7 @@ const ThumbnailGrid = ({ fileIds }: IProps) => {
           onCheckboxChange={handleCheckboxChange}
         />
       ))}
+      <MergeButton pages={pages} />
     </div>
     );
   };

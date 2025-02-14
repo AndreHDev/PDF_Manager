@@ -77,6 +77,42 @@
      }
     }
    }
+  },
+  "/merge": {
+   "post": {
+    "summary": "Merge Pdfs",
+    "operationId": "merge_pdfs_merge_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/MergePDFRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
   }
  },
  "components": {
@@ -95,6 +131,27 @@
     ],
     "title": "Body_upload_file_upload_post"
    },
+   "FilePages": {
+    "properties": {
+     "file_id": {
+      "type": "string",
+      "title": "File Id"
+     },
+     "pages": {
+      "items": {
+       "type": "integer"
+      },
+      "type": "array",
+      "title": "Pages"
+     }
+    },
+    "type": "object",
+    "required": [
+     "file_id",
+     "pages"
+    ],
+    "title": "FilePages"
+   },
    "HTTPValidationError": {
     "properties": {
      "detail": {
@@ -107,6 +164,22 @@
     },
     "type": "object",
     "title": "HTTPValidationError"
+   },
+   "MergePDFRequest": {
+    "properties": {
+     "files": {
+      "items": {
+       "$ref": "#/components/schemas/FilePages"
+      },
+      "type": "array",
+      "title": "Files"
+     }
+    },
+    "type": "object",
+    "required": [
+     "files"
+    ],
+    "title": "MergePDFRequest"
    },
    "ValidationError": {
     "properties": {

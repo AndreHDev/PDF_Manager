@@ -26,6 +26,25 @@ import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerM
 /**
  * 
  * @export
+ * @interface FilePages
+ */
+export interface FilePages {
+    /**
+     * 
+     * @type {string}
+     * @memberof FilePages
+     */
+    'file_id': string;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof FilePages
+     */
+    'pages': Array<number>;
+}
+/**
+ * 
+ * @export
  * @interface HTTPValidationError
  */
 export interface HTTPValidationError {
@@ -35,6 +54,19 @@ export interface HTTPValidationError {
      * @memberof HTTPValidationError
      */
     'detail'?: Array<ValidationError>;
+}
+/**
+ * 
+ * @export
+ * @interface MergePDFRequest
+ */
+export interface MergePDFRequest {
+    /**
+     * 
+     * @type {Array<FilePages>}
+     * @memberof MergePDFRequest
+     */
+    'files': Array<FilePages>;
 }
 /**
  * 
@@ -111,6 +143,42 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
+         * @summary Merge Pdfs
+         * @param {MergePDFRequest} mergePDFRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        mergePdfsMergePost: async (mergePDFRequest: MergePDFRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'mergePDFRequest' is not null or undefined
+            assertParamExists('mergePdfsMergePost', 'mergePDFRequest', mergePDFRequest)
+            const localVarPath = `/merge`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(mergePDFRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Upload File
          * @param {File} file 
          * @param {*} [options] Override http request option.
@@ -175,6 +243,19 @@ export const DefaultApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Merge Pdfs
+         * @param {MergePDFRequest} mergePDFRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async mergePdfsMergePost(mergePDFRequest: MergePDFRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.mergePdfsMergePost(mergePDFRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.mergePdfsMergePost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @summary Upload File
          * @param {File} file 
          * @param {*} [options] Override http request option.
@@ -208,6 +289,16 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
         },
         /**
          * 
+         * @summary Merge Pdfs
+         * @param {MergePDFRequest} mergePDFRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        mergePdfsMergePost(mergePDFRequest: MergePDFRequest, options?: RawAxiosRequestConfig): AxiosPromise<any> {
+            return localVarFp.mergePdfsMergePost(mergePDFRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Upload File
          * @param {File} file 
          * @param {*} [options] Override http request option.
@@ -236,6 +327,18 @@ export class DefaultApi extends BaseAPI {
      */
     public getAllThumbnailsForFileThumbnailsFileIdGet(fileId: string, options?: RawAxiosRequestConfig) {
         return DefaultApiFp(this.configuration).getAllThumbnailsForFileThumbnailsFileIdGet(fileId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Merge Pdfs
+     * @param {MergePDFRequest} mergePDFRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public mergePdfsMergePost(mergePDFRequest: MergePDFRequest, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).mergePdfsMergePost(mergePDFRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
