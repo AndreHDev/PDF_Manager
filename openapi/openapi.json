@@ -5,15 +5,15 @@
   "version": "0.1.0"
  },
  "paths": {
-  "/upload": {
+  "/merge": {
    "post": {
-    "summary": "Upload File",
-    "operationId": "upload_file_upload_post",
+    "summary": "Merge Pdfs",
+    "operationId": "merge_pdfs_merge_post",
     "requestBody": {
      "content": {
-      "multipart/form-data": {
+      "application/json": {
        "schema": {
-        "$ref": "#/components/schemas/Body_upload_file_upload_post"
+        "$ref": "#/components/schemas/MergePDFRequest"
        }
       }
      },
@@ -41,14 +41,14 @@
     }
    }
   },
-  "/thumbnails/{file_id}": {
+  "/thumbnails": {
    "get": {
     "summary": "Get All Thumbnails For File",
-    "operationId": "get_all_thumbnails_for_file_thumbnails__file_id__get",
+    "operationId": "get_all_thumbnails_for_file_thumbnails_get",
     "parameters": [
      {
       "name": "file_id",
-      "in": "path",
+      "in": "query",
       "required": true,
       "schema": {
        "type": "string",
@@ -78,15 +78,15 @@
     }
    }
   },
-  "/merge": {
+  "/upload": {
    "post": {
-    "summary": "Merge Pdfs",
-    "operationId": "merge_pdfs_merge_post",
+    "summary": "Upload File",
+    "operationId": "upload_file_upload_post",
     "requestBody": {
      "content": {
-      "application/json": {
+      "multipart/form-data": {
        "schema": {
-        "$ref": "#/components/schemas/MergePDFRequest"
+        "$ref": "#/components/schemas/Body_upload_file_upload_post"
        }
       }
      },

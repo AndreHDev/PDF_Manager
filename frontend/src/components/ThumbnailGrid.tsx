@@ -31,7 +31,7 @@ const ThumbnailGrid = ({ fileIds }: IProps) => {
               continue;
             }
 
-            const response = await api.getAllThumbnailsForFileThumbnailsFileIdGet(fileId);
+            const response = await api.getAllThumbnailsForFileThumbnailsGet(fileId);
             console.log("Receiveid thumbnails for file", fileId, response.data.thumbnails);
             
             // Append new page

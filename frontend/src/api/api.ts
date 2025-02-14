@@ -114,11 +114,10 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAllThumbnailsForFileThumbnailsFileIdGet: async (fileId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getAllThumbnailsForFileThumbnailsGet: async (fileId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'fileId' is not null or undefined
-            assertParamExists('getAllThumbnailsForFileThumbnailsFileIdGet', 'fileId', fileId)
-            const localVarPath = `/thumbnails/{file_id}`
-                .replace(`{${"file_id"}}`, encodeURIComponent(String(fileId)));
+            assertParamExists('getAllThumbnailsForFileThumbnailsGet', 'fileId', fileId)
+            const localVarPath = `/thumbnails`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -129,6 +128,10 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            if (fileId !== undefined) {
+                localVarQueryParameter['file_id'] = fileId;
+            }
 
 
     
@@ -235,10 +238,10 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getAllThumbnailsForFileThumbnailsFileIdGet(fileId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllThumbnailsForFileThumbnailsFileIdGet(fileId, options);
+        async getAllThumbnailsForFileThumbnailsGet(fileId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllThumbnailsForFileThumbnailsGet(fileId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['DefaultApi.getAllThumbnailsForFileThumbnailsFileIdGet']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.getAllThumbnailsForFileThumbnailsGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -284,8 +287,8 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAllThumbnailsForFileThumbnailsFileIdGet(fileId: string, options?: RawAxiosRequestConfig): AxiosPromise<any> {
-            return localVarFp.getAllThumbnailsForFileThumbnailsFileIdGet(fileId, options).then((request) => request(axios, basePath));
+        getAllThumbnailsForFileThumbnailsGet(fileId: string, options?: RawAxiosRequestConfig): AxiosPromise<any> {
+            return localVarFp.getAllThumbnailsForFileThumbnailsGet(fileId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -325,8 +328,8 @@ export class DefaultApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public getAllThumbnailsForFileThumbnailsFileIdGet(fileId: string, options?: RawAxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).getAllThumbnailsForFileThumbnailsFileIdGet(fileId, options).then((request) => request(this.axios, this.basePath));
+    public getAllThumbnailsForFileThumbnailsGet(fileId: string, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).getAllThumbnailsForFileThumbnailsGet(fileId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
