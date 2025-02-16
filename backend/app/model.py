@@ -23,29 +23,35 @@ class PDF_Model():
         """
         response_pages:List[Page] = []
 
-        file_id = str(uuid.uuid4())
-        # Save the file temporarily
-        file_path = f"temp/{file_id}.pdf"
-        with open(file_path, "wb") as buffer:
-            shutil.copyfileobj(file.file, buffer)
-            print(f"Saved file to {file_path}")
+        try:
+            file_id = str(uuid.uuid4())
+            # Save the file temporarily
+            file_path = f"temp/{file_id}.pdf"
+            with open(file_path, "wb") as buffer:
+                shutil.copyfileobj(file.file, buffer)
+                print(f"Saved file to {file_path}")
 
-        # Get thumbnails for each page
-        thumbnails = self.get_thumbnails(file_path)
+            # Get thumbnails for each page
+            try:
+                thumbnails = self.get_thumbnails(file_path)
+            except Exception as e:
+                raise Exception(f"Error generating thumbnails: {str(e)}")
 
-        # Create page for response
-        reader = PdfReader(file_path)
-        for i in range(len(reader.pages)):
-            new_page = Page(file_id=file_id, page_number=i + 1, thumbnail=thumbnails[i])
-            response_pages.append(new_page)
+            # Create page for response
+            reader = PdfReader(file_path)
+            for i in range(len(reader.pages)):
+                new_page = Page(file_id=file_id, page_number=i + 1, thumbnail=thumbnails[i])
+                response_pages.append(new_page)
 
+        except Exception as e:
+            raise Exception(f"Error processing PDF file: {str(e)}")
 
         return response_pages
 
 
     def get_thumbnails(self, file_path: str) -> List[str]:
         """
-        Geneare a small image to be used as a thumbnail for each page in the PDF file.
+        Generate a small image to be used as a thumbnail for each page in the PDF file.
 
         Args:
             file_path (str): The path to the PDF file.
@@ -62,11 +68,11 @@ class PDF_Model():
                 img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
                 thumbnails.append(f"data:image/png;base64,{img_str}")
             return thumbnails
-        except Exception as e:
-            print(f"An error occurred while trying to make the thumbnails: {e}")
+        except Exception:
+            raise Exception
 
     
-    def merge_selected_pages(self, pages: List[Page] , output_file_path = "merged_output.pdf") -> str:
+    def merge_selected_pages(self, pages: List[Page], output_file_path="merged_output.pdf") -> str:
         """
         Merge a list of pages into a single PDF file. Only pages with checked=True will be merged.
 
@@ -76,7 +82,14 @@ class PDF_Model():
 
         Returns:
             str: Path to the merged file.
+
+        Raises:
+            FileNotFoundError: Raised if a file is not found.
+            IndexError: Raised if a page is not found in a file.
+            ValueError: Raised if no pages are selected for merging.
+            RuntimeError: Raised if an error occurs while merging the pages.
         """
+
         writer = PdfWriter()
         
         for page in pages:
@@ -84,9 +97,18 @@ class PDF_Model():
             if not page.checked:
                 continue
             
-            # Get the page in pdf format for writer
-            new_page = self.get_page_in_pdf_format(page.file_id, page.page_number)
-            writer.add_page(new_page)
+            try:
+                new_page = self.get_page_in_pdf_format(page.file_id, page.page_number)
+                writer.add_page(new_page)
+            except FileNotFoundError:
+                raise FileNotFoundError(f"File {page.file_id} not found.") 
+            except IndexError:
+                raise IndexError(f"Page {page.page_number} not found in file {page.file_id}.")
+            except Exception as e:
+                raise Exception(f"Error processing page {page.page_number}: {str(e)}")
+
+        if not writer.pages:
+            raise ValueError("No pages were selected for merging.")
 
         # Write the merged file
         with open(output_file_path, "wb") as f:
@@ -105,9 +127,22 @@ class PDF_Model():
 
         Returns:
             PdfReader: The page in PdfReader format.
+
+        Raises:
+            FileNotFoundError: Raised if the file is not found.
+            IndexError: Raised if the page is not found in the file.
         """
-        reader = PdfReader(f"temp/{file_id}.pdf")
-        return reader.pages[page_number - 1]
+        try:
+            reader = PdfReader(f"temp/{file_id}.pdf")
+        except FileNotFoundError:
+            raise FileNotFoundError
+        
+        try:
+            page = reader.pages[page_number - 1]
+        except IndexError:
+            raise IndexError
+        
+        return page
 
 
 pdf_model_instance = PDF_Model()
