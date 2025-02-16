@@ -15,3 +15,5 @@ with open("../../openapi/openapi.json", "w") as file:
         file,
         indent=True,
     )
+
+print("OpenAPI schema generated!")

@@ -107,15 +107,15 @@ export interface ValidationErrorLocInner {
 export const DefaultApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * 
+         * Merge passed page objects into a single PDF file. Only pages with checked=True will be merged.  Args:     request (List[Page]): List of Page objects to merge.  Returns:     FileResponse: Merged PDF file.
          * @summary Merge Pdfs
          * @param {Array<Page>} page 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        mergePdfsMergePost: async (page: Array<Page>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        mergePdfs: async (page: Array<Page>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'page' is not null or undefined
-            assertParamExists('mergePdfsMergePost', 'page', page)
+            assertParamExists('mergePdfs', 'page', page)
             const localVarPath = `/merge`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -143,15 +143,15 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
-         * 
+         * Upload a PDF file to get all pages from that file.  Args:     file (UploadFile): The PDF file to be uploaded.  Returns:     List[Page]: A list of page objects. extracted from the uploaded PDF file.
          * @summary Upload File
          * @param {File} file 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        uploadFileUploadPost: async (file: File, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        uploadFile: async (file: File, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'file' is not null or undefined
-            assertParamExists('uploadFileUploadPost', 'file', file)
+            assertParamExists('uploadFile', 'file', file)
             const localVarPath = `/upload`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -194,29 +194,29 @@ export const DefaultApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = DefaultApiAxiosParamCreator(configuration)
     return {
         /**
-         * 
+         * Merge passed page objects into a single PDF file. Only pages with checked=True will be merged.  Args:     request (List[Page]): List of Page objects to merge.  Returns:     FileResponse: Merged PDF file.
          * @summary Merge Pdfs
          * @param {Array<Page>} page 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async mergePdfsMergePost(page: Array<Page>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.mergePdfsMergePost(page, options);
+        async mergePdfs(page: Array<Page>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.mergePdfs(page, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['DefaultApi.mergePdfsMergePost']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.mergePdfs']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * 
+         * Upload a PDF file to get all pages from that file.  Args:     file (UploadFile): The PDF file to be uploaded.  Returns:     List[Page]: A list of page objects. extracted from the uploaded PDF file.
          * @summary Upload File
          * @param {File} file 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async uploadFileUploadPost(file: File, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Page>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.uploadFileUploadPost(file, options);
+        async uploadFile(file: File, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Page>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.uploadFile(file, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['DefaultApi.uploadFileUploadPost']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.uploadFile']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -230,24 +230,24 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
     const localVarFp = DefaultApiFp(configuration)
     return {
         /**
-         * 
+         * Merge passed page objects into a single PDF file. Only pages with checked=True will be merged.  Args:     request (List[Page]): List of Page objects to merge.  Returns:     FileResponse: Merged PDF file.
          * @summary Merge Pdfs
          * @param {Array<Page>} page 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        mergePdfsMergePost(page: Array<Page>, options?: RawAxiosRequestConfig): AxiosPromise<any> {
-            return localVarFp.mergePdfsMergePost(page, options).then((request) => request(axios, basePath));
+        mergePdfs(page: Array<Page>, options?: RawAxiosRequestConfig): AxiosPromise<any> {
+            return localVarFp.mergePdfs(page, options).then((request) => request(axios, basePath));
         },
         /**
-         * 
+         * Upload a PDF file to get all pages from that file.  Args:     file (UploadFile): The PDF file to be uploaded.  Returns:     List[Page]: A list of page objects. extracted from the uploaded PDF file.
          * @summary Upload File
          * @param {File} file 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        uploadFileUploadPost(file: File, options?: RawAxiosRequestConfig): AxiosPromise<Array<Page>> {
-            return localVarFp.uploadFileUploadPost(file, options).then((request) => request(axios, basePath));
+        uploadFile(file: File, options?: RawAxiosRequestConfig): AxiosPromise<Array<Page>> {
+            return localVarFp.uploadFile(file, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -260,27 +260,27 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
  */
 export class DefaultApi extends BaseAPI {
     /**
-     * 
+     * Merge passed page objects into a single PDF file. Only pages with checked=True will be merged.  Args:     request (List[Page]): List of Page objects to merge.  Returns:     FileResponse: Merged PDF file.
      * @summary Merge Pdfs
      * @param {Array<Page>} page 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public mergePdfsMergePost(page: Array<Page>, options?: RawAxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).mergePdfsMergePost(page, options).then((request) => request(this.axios, this.basePath));
+    public mergePdfs(page: Array<Page>, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).mergePdfs(page, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * 
+     * Upload a PDF file to get all pages from that file.  Args:     file (UploadFile): The PDF file to be uploaded.  Returns:     List[Page]: A list of page objects. extracted from the uploaded PDF file.
      * @summary Upload File
      * @param {File} file 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public uploadFileUploadPost(file: File, options?: RawAxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).uploadFileUploadPost(file, options).then((request) => request(this.axios, this.basePath));
+    public uploadFile(file: File, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).uploadFile(file, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

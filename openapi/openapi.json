@@ -8,7 +8,8 @@
   "/merge": {
    "post": {
     "summary": "Merge Pdfs",
-    "operationId": "merge_pdfs_merge_post",
+    "description": "Merge passed page objects into a single PDF file. Only pages with checked=True will be merged.\n\nArgs:\n    request (List[Page]): List of Page objects to merge.\n\nReturns:\n    FileResponse: Merged PDF file.",
+    "operationId": "merge_pdfs",
     "requestBody": {
      "content": {
       "application/json": {
@@ -48,7 +49,8 @@
   "/upload": {
    "post": {
     "summary": "Upload File",
-    "operationId": "upload_file_upload_post",
+    "description": "Upload a PDF file to get all pages from that file.\n\nArgs:\n    file (UploadFile): The PDF file to be uploaded.\n\nReturns:\n    List[Page]: A list of page objects. extracted from the uploaded PDF file.",
+    "operationId": "upload_file",
     "requestBody": {
      "content": {
       "multipart/form-data": {

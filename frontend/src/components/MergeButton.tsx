@@ -9,7 +9,7 @@ const MergeButton = ({ pages }: MergeButtonProps) => {
 
     const handleMerge = async () => {
         // Merge pages and get the merged PDF in response
-        const response = await api.mergePdfsMergePost(pages, { responseType: 'blob' });
+        const response = await api.mergePdfs(pages, { responseType: 'blob' });
         console.log("Merge response:", response);
 
         const pdfBlob = new Blob([response.data], { type: 'application/pdf' });

@@ -1,4 +1,4 @@
-from model import pdf_model_instance
+from backend import pdf_model_instance
 from schemas import Page
 from fastapi import UploadFile, File, APIRouter, HTTPException
 from fastapi.responses import FileResponse

@@ -21,7 +21,7 @@ function UploadDialog({onUploadSuccess}: IProps) {
     
     const uploadFile = async (file:File) => {
       try {
-        const response = await api.uploadFileUploadPost(file);
+        const response = await api.uploadFile(file);
         console.log(response);
         if (response.data && response.data) {
           onUploadSuccess(response.data);
