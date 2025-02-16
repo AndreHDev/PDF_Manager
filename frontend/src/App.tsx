@@ -3,7 +3,7 @@ import './App.css'
 import UploadDialog from './components/UploadDialog';
 import ThumbnailGrid from './components/ThumbnailGrid';
 import type { Page } from './api/api';
-import MergeButton from './components/MergeButtom';
+import MergeButton from './components/MergeButton';
 
 const App: React.FC = () => {
   const [pages, setPages] = useState<Page[]>([]);
