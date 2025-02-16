@@ -88,6 +88,22 @@
      }
     }
    }
+  },
+  "/clean-up": {
+   "get": {
+    "summary": "Clean Up",
+    "operationId": "clean_up",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     }
+    }
+   }
   }
  },
  "components": {

@@ -3,12 +3,13 @@ from schemas import Page
 from fastapi import UploadFile, File, APIRouter, HTTPException
 from fastapi.responses import FileResponse
 from typing import List
+from starlette.background import BackgroundTasks
 import os
 
 fileRouter = APIRouter()
 
 @fileRouter.post("/merge")
-async def merge_pdfs(request: List[Page]):
+async def merge_pdfs(request: List[Page], background_tasks: BackgroundTasks):
     """
     Merge passed page objects into a single PDF file. Only pages with checked=True will be merged.
 
@@ -37,7 +38,11 @@ async def merge_pdfs(request: List[Page]):
         raise HTTPException(status_code=404,
         detail="Merged PDF file not found, something went wrong while tryging to merge the files.")
 
-    return FileResponse(output_file)
+    background_tasks.add_task(pdf_model_instance.delete_merged_file, output_file)
+
+    response = FileResponse(output_file)
+
+    return response
 
 
 @fileRouter.post("/upload", response_model=List[Page])
@@ -60,3 +65,11 @@ async def upload_file(file: UploadFile = File(...)):
     
 
     return pages
+
+@fileRouter.get("/clean-up")
+async def clean_up():
+    print("Received request to clean up!")
+    try:
+        pdf_model_instance.clean_up()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

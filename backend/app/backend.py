@@ -7,6 +7,7 @@ import uuid
 import shutil
 from schemas import Page
 from fastapi import UploadFile
+import os
  
 
 class PDF_Model():
@@ -143,6 +144,24 @@ class PDF_Model():
             raise IndexError
         
         return page
+    
+    def delete_merged_file(self, file_path="merged_output.pdf"):
+        # Delete merged file
+        try:
+            os.remove(file_path)
+        except FileNotFoundError:
+            print("Attempted to delete a File thats already deleted.")
+            pass
 
+    def clean_up(self):
+        # Clean up all pdf files in temp folder
+        try:
+            for file in os.listdir("temp"):
+                if file.endswith(".pdf"):
+                    os.remove(f"temp/{file}")
+        except Exception as e:
+            raise Exception(f"Error cleaning up temp folder: {str(e)}")
+        
+        self.delete_merged_file()
 
 pdf_model_instance = PDF_Model()

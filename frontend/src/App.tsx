@@ -1,9 +1,10 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import './App.css'
 import UploadDialog from './components/UploadDialog';
 import ThumbnailGrid from './components/ThumbnailGrid';
 import type { Page } from './api/api';
 import MergeButton from './components/MergeButton';
+import { api } from './api/myApi';
 
 const App: React.FC = () => {
   const [pages, setPages] = useState<Page[]>([]);
@@ -36,6 +37,21 @@ const App: React.FC = () => {
       }
       return newPages;
     });
+  }, []);
+
+  useEffect(() => {
+    const cleanup = async () => {
+      const response = await api.cleanUp();
+      console.log('Cleanup response:', response);
+    };
+
+    // Cleanup backend on page unload
+    window.addEventListener('beforeunload', cleanup);
+
+    return () => {
+      window.removeEventListener('beforeunload', cleanup);
+      cleanup();
+    };
   }, []);
 
   return (
