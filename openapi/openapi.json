@@ -5,10 +5,10 @@
   "version": "0.1.0"
  },
  "paths": {
-  "/merge": {
+  "/pages/merge": {
    "post": {
     "summary": "Merge Pdfs",
-    "description": "Merge passed page objects into a single PDF file. Only pages with checked=True will be merged.\n\nArgs:\n    request (List[Page]): List of Page objects to merge.\n\nReturns:\n    FileResponse: Merged PDF file.",
+    "description": "Merge passed page objects into a single PDF file. Only pages with checked=True will be merged.\n\nArgs:\n    request (List[Page]): List of Page objects to merge.\n\nReturns:\n    dict: A dictionary containing the file_id of the merged PDF.",
     "operationId": "merge_pdfs",
     "requestBody": {
      "content": {
@@ -29,7 +29,10 @@
       "description": "Successful Response",
       "content": {
        "application/json": {
-        "schema": {}
+        "schema": {
+         "type": "object",
+         "title": "Response Merge Pdfs Pages Merge Post"
+        }
        }
       }
      },
@@ -46,16 +49,16 @@
     }
    }
   },
-  "/upload": {
+  "/pdfs": {
    "post": {
-    "summary": "Upload File",
-    "description": "Upload a PDF file to get all pages from that file.\n\nArgs:\n    file (UploadFile): The PDF file to be uploaded.\n\nReturns:\n    List[Page]: A list of page objects. extracted from the uploaded PDF file.",
-    "operationId": "upload_file",
+    "summary": "Upload Pdf",
+    "description": "Uploads a PDF and returns its unique file_id.\n\nArgs:\n    file (UploadFile, optional): The PDF file to upload.\n\nReturns:\n    dict: A dictionary containing the file_id of the uploaded PDF.",
+    "operationId": "upload_pdf",
     "requestBody": {
      "content": {
       "multipart/form-data": {
        "schema": {
-        "$ref": "#/components/schemas/Body_upload_file_upload_post"
+        "$ref": "#/components/schemas/Body_upload_pdf_pdfs_post"
        }
       }
      },
@@ -67,11 +70,67 @@
       "content": {
        "application/json": {
         "schema": {
+         "type": "object",
+         "title": "Response Upload Pdf Pdfs Post"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "summary": "Clean Up Temp Files",
+    "description": "Cleans up temporary files created by the backend.\n\nReturns:\n    dict: A message indicating the cleanup was successful.",
+    "operationId": "clean_up_temp_files",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     }
+    }
+   }
+  },
+  "/pdfs/{pdf_id}/pages": {
+   "get": {
+    "summary": "Get Pdf Pages",
+    "description": "Returns a list of Page objects for a given PDF.\n\nArgs:\n    pdf_id (str): The file_id of the PDF to fetch pages for.\n\nReturns:\n    List[Page]: A list of Page objects for the given PDF.",
+    "operationId": "get_pdf_pages",
+    "parameters": [
+     {
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Pdf Id"
+      },
+      "name": "pdf_id",
+      "in": "path"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
          "items": {
           "$ref": "#/components/schemas/Page"
          },
          "type": "array",
-         "title": "Response Upload File Upload Post"
+         "title": "Response Get Pdf Pages Pdfs  Pdf Id  Pages Get"
         }
        }
       }
@@ -89,16 +148,38 @@
     }
    }
   },
-  "/clean-up": {
+  "/pdfs/{pdf_id}/download": {
    "get": {
-    "summary": "Clean Up",
-    "operationId": "clean_up",
+    "summary": "Download Pdf",
+    "description": "Gets a PDf file for download by its file_id\nArgs:\n    pdf_id (str): The file_id of the PDF to download.\n\nReturns:\n    FileResponse: The PDF file for download.",
+    "operationId": "download_pdf",
+    "parameters": [
+     {
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Pdf Id"
+      },
+      "name": "pdf_id",
+      "in": "path"
+     }
+    ],
     "responses": {
      "200": {
       "description": "Successful Response",
       "content": {
        "application/json": {
         "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
        }
       }
      }
@@ -108,7 +189,7 @@
  },
  "components": {
   "schemas": {
-   "Body_upload_file_upload_post": {
+   "Body_upload_pdf_pdfs_post": {
     "properties": {
      "file": {
       "type": "string",
@@ -120,7 +201,7 @@
     "required": [
      "file"
     ],
-    "title": "Body_upload_file_upload_post"
+    "title": "Body_upload_pdf_pdfs_post"
    },
    "HTTPValidationError": {
     "properties": {
@@ -137,10 +218,6 @@
    },
    "Page": {
     "properties": {
-     "file_id": {
-      "type": "string",
-      "title": "File Id"
-     },
      "page_number": {
       "type": "integer",
       "title": "Page Number"
@@ -157,7 +234,6 @@
     },
     "type": "object",
     "required": [
-     "file_id",
      "page_number",
      "thumbnail"
     ],
