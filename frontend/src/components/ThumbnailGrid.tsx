@@ -55,7 +55,6 @@ const ThumbnailGrid = ({ pages, onCheckBoxChange, swapPages }: IProps) => {
       setDraggedPage({ fileId, pageNumber });
     }
 
-    //TODO: Check button communication for a better way and move it under the grid
     return (
       <div className="grid grid-cols-5 gap-4 mt-4 bg-custom-dark p-4" onDrop={handleDrop} onDragOver={(e) => e.preventDefault()}>
       {pages.map((page, index) => (

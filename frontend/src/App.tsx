@@ -9,9 +9,24 @@ import { api } from './api/myApi';
 const App: React.FC = () => {
   const [pages, setPages] = useState<Page[]>([]);
 
-  const handleUploadSuccess = useCallback((pages: Page[]) => {
-    setPages(prevPages => [...prevPages, ...pages]);
-    console.log("Upload complete, current pages:", pages);
+  const handleUploadSuccess = useCallback((file_id: string) => {
+    const getPdfPages = async (file_id: string) => {
+      try {
+        const response = await api.getPdfPages(file_id);
+        return response.data;
+      }
+      catch (error) {
+        console.error('Error getting pages:', error);
+        return [];
+      }
+    };
+
+    const fetchPages = async () => {
+      const new_pages = await getPdfPages(file_id);
+      setPages(prevPages => [...prevPages, ...new_pages]);
+    };
+
+    fetchPages();
   }, []);
 
   const handleCheckBoxChange = useCallback((fileId: string, pageNumber: number, checked: boolean) => {
@@ -41,7 +56,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const cleanup = async () => {
-      const response = await api.cleanUp();
+      const response = await api.cleanUpTempFiles();
       console.log('Cleanup response:', response);
     };
 

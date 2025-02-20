@@ -31,7 +31,7 @@ async def merge_pdfs(request: List[Page]):
         raise HTTPException(status_code=404, detail=str(ie))
     except Exception as e: # Everything else
         raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
-
+    print(f"Merged PDF file_id: {merged_file_id}")
 
     return {"file_id": merged_file_id}
 
@@ -50,31 +50,33 @@ async def upload_pdf(file: UploadFile = File(...)):
     print("Received request to upload file!")
 
     try:
-        pdf_id = pdf_model_instance.add_pdf_file(file)
+        file_id = pdf_model_instance.add_pdf_file(file)
     except Exception as e:
+        print(f"Error uploading file: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
     
-    return {"pdf_id": pdf_id}
+    return {"file_id": file_id}
 
 
-@fileRouter.get("/pdfs/{pdf_id}/pages", response_model=List[Page])
-async def get_pdf_pages(pdf_id: str):
+@fileRouter.get("/pdfs/{file_id}/pages", response_model=List[Page])
+async def get_pdf_pages(file_id: str):
     """
     Returns a list of Page objects for a given PDF.
 
     Args:
-        pdf_id (str): The file_id of the PDF to fetch pages for.
+        file_id (str): The file_id of the PDF to fetch pages for.
 
     Returns:
         List[Page]: A list of Page objects for the given PDF.
     """
-    print(f"Fetching pages for PDF: {pdf_id}")
+    print(f"Fetching pages for PDF: {file_id}")
 
     try:
-        pages = pdf_model_instance.get_pdf_pages(pdf_id)
+        pages = pdf_model_instance.get_pdf_pages(file_id)
     except FileNotFoundError:
         raise HTTPException(status_code=404, detail="PDF file not found")
     except Exception as e:
+        print(f"Error fetching pages: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
     return pages

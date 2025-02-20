@@ -12,7 +12,7 @@ import os
 
 class PDF_Model():
     def __init__(self):
-        self._pdfs = List[Pdf]
+        self._pdfs: List[Pdf] = []
     
     def get_pdf(self, pdf_id: str) -> Page:
         for pdf in self._pdfs:
@@ -20,7 +20,8 @@ class PDF_Model():
                 return pdf
         return None
     
-    def add_pdf(self, pdf: Page):
+    def add_pdf(self, pdf: Pdf):
+        print(f"Adding PDF file {pdf.file_id} to backend. {len(pdf.pages)} pages. {type(pdf)}")
         self._pdfs.append(pdf)
 
     def add_pdf_file(self, file: UploadFile) -> str: #TODO better name?
@@ -31,10 +32,11 @@ class PDF_Model():
             file (UploadFile): The PDF file to be uploaded.
 
         Returns:
-            List[Page]: A list of page objects.
+            str: The id of the uploaded PDF file.
         """
         pages:List[Page] = []
         file_id = str(uuid.uuid4())
+
         try:
             # Save the file temporarily
             file_path = self.get_pdf_path(file_id)
@@ -51,14 +53,16 @@ class PDF_Model():
             # Create page for response
             reader = PdfReader(file_path)
             for i in range(len(reader.pages)):
-                new_page = Page(page_number=i + 1, thumbnail=thumbnails[i])
+                new_page = Page(file_id=file_id, page_number=i + 1, thumbnail=thumbnails[i])
                 pages.append(new_page)
+            print(f"Extracted {len(pages)} pages from PDF file.")
 
         except Exception as e:
             raise Exception(f"Error processing PDF file: {str(e)}")
         
         self.add_pdf(Pdf(file_id=file_id, pages=pages))
 
+        print(f"Added PDF file {file_id} to backend.")
         return file_id
     
 

@@ -104,19 +104,19 @@
     }
    }
   },
-  "/pdfs/{pdf_id}/pages": {
+  "/pdfs/{file_id}/pages": {
    "get": {
     "summary": "Get Pdf Pages",
-    "description": "Returns a list of Page objects for a given PDF.\n\nArgs:\n    pdf_id (str): The file_id of the PDF to fetch pages for.\n\nReturns:\n    List[Page]: A list of Page objects for the given PDF.",
+    "description": "Returns a list of Page objects for a given PDF.\n\nArgs:\n    file_id (str): The file_id of the PDF to fetch pages for.\n\nReturns:\n    List[Page]: A list of Page objects for the given PDF.",
     "operationId": "get_pdf_pages",
     "parameters": [
      {
       "required": true,
       "schema": {
        "type": "string",
-       "title": "Pdf Id"
+       "title": "File Id"
       },
-      "name": "pdf_id",
+      "name": "file_id",
       "in": "path"
      }
     ],
@@ -130,7 +130,7 @@
           "$ref": "#/components/schemas/Page"
          },
          "type": "array",
-         "title": "Response Get Pdf Pages Pdfs  Pdf Id  Pages Get"
+         "title": "Response Get Pdf Pages Pdfs  File Id  Pages Get"
         }
        }
       }
@@ -218,6 +218,10 @@
    },
    "Page": {
     "properties": {
+     "file_id": {
+      "type": "string",
+      "title": "File Id"
+     },
      "page_number": {
       "type": "integer",
       "title": "Page Number"
@@ -234,6 +238,7 @@
     },
     "type": "object",
     "required": [
+     "file_id",
      "page_number",
      "thumbnail"
     ],

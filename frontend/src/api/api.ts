@@ -107,13 +107,47 @@ export interface ValidationErrorLocInner {
 export const DefaultApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * 
-         * @summary Clean Up
+         * Cleans up temporary files created by the backend.  Returns:     dict: A message indicating the cleanup was successful.
+         * @summary Clean Up Temp Files
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        cleanUp: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/clean-up`;
+        cleanUpTempFiles: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/pdfs`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Gets a PDf file for download by its file_id Args:     pdf_id (str): The file_id of the PDF to download.  Returns:     FileResponse: The PDF file for download.
+         * @summary Download Pdf
+         * @param {string} pdfId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        downloadPdf: async (pdfId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'pdfId' is not null or undefined
+            assertParamExists('downloadPdf', 'pdfId', pdfId)
+            const localVarPath = `/pdfs/{pdf_id}/download`
+                .replace(`{${"pdf_id"}}`, encodeURIComponent(String(pdfId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -137,7 +171,41 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
-         * Merge passed page objects into a single PDF file. Only pages with checked=True will be merged.  Args:     request (List[Page]): List of Page objects to merge.  Returns:     FileResponse: Merged PDF file.
+         * Returns a list of Page objects for a given PDF.  Args:     file_id (str): The file_id of the PDF to fetch pages for.  Returns:     List[Page]: A list of Page objects for the given PDF.
+         * @summary Get Pdf Pages
+         * @param {string} fileId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getPdfPages: async (fileId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'fileId' is not null or undefined
+            assertParamExists('getPdfPages', 'fileId', fileId)
+            const localVarPath = `/pdfs/{file_id}/pages`
+                .replace(`{${"file_id"}}`, encodeURIComponent(String(fileId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Merge passed page objects into a single PDF file. Only pages with checked=True will be merged.  Args:     request (List[Page]): List of Page objects to merge.  Returns:     dict: A dictionary containing the file_id of the merged PDF.
          * @summary Merge Pdfs
          * @param {Array<Page>} page 
          * @param {*} [options] Override http request option.
@@ -146,7 +214,7 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
         mergePdfs: async (page: Array<Page>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'page' is not null or undefined
             assertParamExists('mergePdfs', 'page', page)
-            const localVarPath = `/merge`;
+            const localVarPath = `/pages/merge`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -173,16 +241,16 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
-         * Upload a PDF file to get all pages from that file.  Args:     file (UploadFile): The PDF file to be uploaded.  Returns:     List[Page]: A list of page objects. extracted from the uploaded PDF file.
-         * @summary Upload File
+         * Uploads a PDF and returns its unique file_id.  Args:     file (UploadFile, optional): The PDF file to upload.  Returns:     dict: A dictionary containing the file_id of the uploaded PDF.
+         * @summary Upload Pdf
          * @param {File} file 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        uploadFile: async (file: File, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        uploadPdf: async (file: File, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'file' is not null or undefined
-            assertParamExists('uploadFile', 'file', file)
-            const localVarPath = `/upload`;
+            assertParamExists('uploadPdf', 'file', file)
+            const localVarPath = `/pdfs`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -224,41 +292,67 @@ export const DefaultApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = DefaultApiAxiosParamCreator(configuration)
     return {
         /**
-         * 
-         * @summary Clean Up
+         * Cleans up temporary files created by the backend.  Returns:     dict: A message indicating the cleanup was successful.
+         * @summary Clean Up Temp Files
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async cleanUp(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.cleanUp(options);
+        async cleanUpTempFiles(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.cleanUpTempFiles(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['DefaultApi.cleanUp']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.cleanUpTempFiles']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * Merge passed page objects into a single PDF file. Only pages with checked=True will be merged.  Args:     request (List[Page]): List of Page objects to merge.  Returns:     FileResponse: Merged PDF file.
+         * Gets a PDf file for download by its file_id Args:     pdf_id (str): The file_id of the PDF to download.  Returns:     FileResponse: The PDF file for download.
+         * @summary Download Pdf
+         * @param {string} pdfId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async downloadPdf(pdfId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.downloadPdf(pdfId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.downloadPdf']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Returns a list of Page objects for a given PDF.  Args:     file_id (str): The file_id of the PDF to fetch pages for.  Returns:     List[Page]: A list of Page objects for the given PDF.
+         * @summary Get Pdf Pages
+         * @param {string} fileId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getPdfPages(fileId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Page>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getPdfPages(fileId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.getPdfPages']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Merge passed page objects into a single PDF file. Only pages with checked=True will be merged.  Args:     request (List[Page]): List of Page objects to merge.  Returns:     dict: A dictionary containing the file_id of the merged PDF.
          * @summary Merge Pdfs
          * @param {Array<Page>} page 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async mergePdfs(page: Array<Page>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
+        async mergePdfs(page: Array<Page>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.mergePdfs(page, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['DefaultApi.mergePdfs']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * Upload a PDF file to get all pages from that file.  Args:     file (UploadFile): The PDF file to be uploaded.  Returns:     List[Page]: A list of page objects. extracted from the uploaded PDF file.
-         * @summary Upload File
+         * Uploads a PDF and returns its unique file_id.  Args:     file (UploadFile, optional): The PDF file to upload.  Returns:     dict: A dictionary containing the file_id of the uploaded PDF.
+         * @summary Upload Pdf
          * @param {File} file 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async uploadFile(file: File, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Page>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.uploadFile(file, options);
+        async uploadPdf(file: File, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.uploadPdf(file, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['DefaultApi.uploadFile']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.uploadPdf']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -272,33 +366,53 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
     const localVarFp = DefaultApiFp(configuration)
     return {
         /**
-         * 
-         * @summary Clean Up
+         * Cleans up temporary files created by the backend.  Returns:     dict: A message indicating the cleanup was successful.
+         * @summary Clean Up Temp Files
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        cleanUp(options?: RawAxiosRequestConfig): AxiosPromise<any> {
-            return localVarFp.cleanUp(options).then((request) => request(axios, basePath));
+        cleanUpTempFiles(options?: RawAxiosRequestConfig): AxiosPromise<any> {
+            return localVarFp.cleanUpTempFiles(options).then((request) => request(axios, basePath));
         },
         /**
-         * Merge passed page objects into a single PDF file. Only pages with checked=True will be merged.  Args:     request (List[Page]): List of Page objects to merge.  Returns:     FileResponse: Merged PDF file.
+         * Gets a PDf file for download by its file_id Args:     pdf_id (str): The file_id of the PDF to download.  Returns:     FileResponse: The PDF file for download.
+         * @summary Download Pdf
+         * @param {string} pdfId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        downloadPdf(pdfId: string, options?: RawAxiosRequestConfig): AxiosPromise<any> {
+            return localVarFp.downloadPdf(pdfId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Returns a list of Page objects for a given PDF.  Args:     file_id (str): The file_id of the PDF to fetch pages for.  Returns:     List[Page]: A list of Page objects for the given PDF.
+         * @summary Get Pdf Pages
+         * @param {string} fileId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getPdfPages(fileId: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<Page>> {
+            return localVarFp.getPdfPages(fileId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Merge passed page objects into a single PDF file. Only pages with checked=True will be merged.  Args:     request (List[Page]): List of Page objects to merge.  Returns:     dict: A dictionary containing the file_id of the merged PDF.
          * @summary Merge Pdfs
          * @param {Array<Page>} page 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        mergePdfs(page: Array<Page>, options?: RawAxiosRequestConfig): AxiosPromise<any> {
+        mergePdfs(page: Array<Page>, options?: RawAxiosRequestConfig): AxiosPromise<object> {
             return localVarFp.mergePdfs(page, options).then((request) => request(axios, basePath));
         },
         /**
-         * Upload a PDF file to get all pages from that file.  Args:     file (UploadFile): The PDF file to be uploaded.  Returns:     List[Page]: A list of page objects. extracted from the uploaded PDF file.
-         * @summary Upload File
+         * Uploads a PDF and returns its unique file_id.  Args:     file (UploadFile, optional): The PDF file to upload.  Returns:     dict: A dictionary containing the file_id of the uploaded PDF.
+         * @summary Upload Pdf
          * @param {File} file 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        uploadFile(file: File, options?: RawAxiosRequestConfig): AxiosPromise<Array<Page>> {
-            return localVarFp.uploadFile(file, options).then((request) => request(axios, basePath));
+        uploadPdf(file: File, options?: RawAxiosRequestConfig): AxiosPromise<object> {
+            return localVarFp.uploadPdf(file, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -311,18 +425,42 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
  */
 export class DefaultApi extends BaseAPI {
     /**
-     * 
-     * @summary Clean Up
+     * Cleans up temporary files created by the backend.  Returns:     dict: A message indicating the cleanup was successful.
+     * @summary Clean Up Temp Files
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public cleanUp(options?: RawAxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).cleanUp(options).then((request) => request(this.axios, this.basePath));
+    public cleanUpTempFiles(options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).cleanUpTempFiles(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * Merge passed page objects into a single PDF file. Only pages with checked=True will be merged.  Args:     request (List[Page]): List of Page objects to merge.  Returns:     FileResponse: Merged PDF file.
+     * Gets a PDf file for download by its file_id Args:     pdf_id (str): The file_id of the PDF to download.  Returns:     FileResponse: The PDF file for download.
+     * @summary Download Pdf
+     * @param {string} pdfId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public downloadPdf(pdfId: string, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).downloadPdf(pdfId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Returns a list of Page objects for a given PDF.  Args:     file_id (str): The file_id of the PDF to fetch pages for.  Returns:     List[Page]: A list of Page objects for the given PDF.
+     * @summary Get Pdf Pages
+     * @param {string} fileId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public getPdfPages(fileId: string, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).getPdfPages(fileId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Merge passed page objects into a single PDF file. Only pages with checked=True will be merged.  Args:     request (List[Page]): List of Page objects to merge.  Returns:     dict: A dictionary containing the file_id of the merged PDF.
      * @summary Merge Pdfs
      * @param {Array<Page>} page 
      * @param {*} [options] Override http request option.
@@ -334,15 +472,15 @@ export class DefaultApi extends BaseAPI {
     }
 
     /**
-     * Upload a PDF file to get all pages from that file.  Args:     file (UploadFile): The PDF file to be uploaded.  Returns:     List[Page]: A list of page objects. extracted from the uploaded PDF file.
-     * @summary Upload File
+     * Uploads a PDF and returns its unique file_id.  Args:     file (UploadFile, optional): The PDF file to upload.  Returns:     dict: A dictionary containing the file_id of the uploaded PDF.
+     * @summary Upload Pdf
      * @param {File} file 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public uploadFile(file: File, options?: RawAxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).uploadFile(file, options).then((request) => request(this.axios, this.basePath));
+    public uploadPdf(file: File, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).uploadPdf(file, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
