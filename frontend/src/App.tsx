@@ -6,21 +6,21 @@ import type { Page } from './api/api';
 import MergeButton from './components/MergeButton';
 import { api } from './api/myApi';
 
-const App: React.FC = () => {
+const App = () => {
   const [pages, setPages] = useState<Page[]>([]);
 
+  const getPdfPages = async (file_id: string) => {
+    try {
+      const response = await api.getPdfPages(file_id);
+      return response.data;
+    }
+    catch (error) {
+      console.error('Error getting pages:', error);
+      return [];
+    }
+  };
+  
   const handleUploadSuccess = useCallback((file_id: string) => {
-    const getPdfPages = async (file_id: string) => {
-      try {
-        const response = await api.getPdfPages(file_id);
-        return response.data;
-      }
-      catch (error) {
-        console.error('Error getting pages:', error);
-        return [];
-      }
-    };
-
     const fetchPages = async () => {
       const new_pages = await getPdfPages(file_id);
       setPages(prevPages => [...prevPages, ...new_pages]);
@@ -44,12 +44,15 @@ const App: React.FC = () => {
 
   const handleSwapPages = useCallback((draggedPage: { fileId: string, pageNumber: number }, targetPage: { fileId: string, pageNumber: number }) => {
     setPages(prevPages => {
+      const draggedIndex = prevPages.findIndex(p => p.file_id === draggedPage.fileId && p.page_number === draggedPage.pageNumber);
+      const targetIndex = prevPages.findIndex(p => p.file_id === targetPage.fileId && p.page_number === targetPage.pageNumber);
+      
+      if (draggedIndex === -1 || targetIndex === -1) return prevPages;
+      
       const newPages = [...prevPages];
-      const draggedPageIndex = newPages.findIndex(page => page.file_id === draggedPage.fileId && page.page_number === draggedPage.pageNumber);
-      const targetPageIndex = newPages.findIndex(page => page.file_id === targetPage.fileId && page.page_number === targetPage.pageNumber);
-      if (draggedPageIndex !== -1 && targetPageIndex !== -1) {
-        [newPages[draggedPageIndex], newPages[targetPageIndex]] = [newPages[targetPageIndex], newPages[draggedPageIndex]];
-      }
+      // Swap the pages
+      [newPages[draggedIndex], newPages[targetIndex]] = [newPages[targetIndex], newPages[draggedIndex]];
+      
       return newPages;
     });
   }, []);

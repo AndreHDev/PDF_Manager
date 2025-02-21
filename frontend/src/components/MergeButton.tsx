@@ -6,9 +6,8 @@ interface MergeButtonProps {
 }
 
 const MergeButton = ({ pages }: MergeButtonProps) => {
-
+    
     const handleMerge = async () => {
-
         // Merge the PDFs
         const mergePdfs = async (pages: Page[]) => {
             try {
@@ -27,7 +26,7 @@ const MergeButton = ({ pages }: MergeButtonProps) => {
         if (typeof mergedPdfId !== 'string') return;
 
         // Get the merged PDF
-        const getMergePdf = async (file_id: string) => {
+        const getMergedPdf = async (file_id: string) => {
             try {
                 const response = await api.downloadPdf(file_id, { responseType: 'blob' });
                 return response.data;
@@ -38,7 +37,7 @@ const MergeButton = ({ pages }: MergeButtonProps) => {
             }
         };
 
-        const pdfData = await getMergePdf(mergedPdfId);
+        const pdfData = await getMergedPdf(mergedPdfId);
         const pdfBlob = new Blob([pdfData], { type: 'application/pdf' });
         const pdfUrl = URL.createObjectURL(pdfBlob);
 

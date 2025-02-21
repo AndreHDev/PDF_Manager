@@ -127,6 +127,9 @@ class PDF_Model():
         """
 
         writer = PdfWriter()
+
+        if not pages:
+            raise ValueError("No pages were given.")
         
         for page in pages:
             # Skip unchecked pages
