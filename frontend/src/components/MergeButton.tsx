@@ -29,7 +29,7 @@ const MergeButton = ({ pages }: MergeButtonProps) => {
         // Get the merged PDF
         const getMergePdf = async (file_id: string) => {
             try {
-                const response = await api.downloadPdf(file_id);
+                const response = await api.downloadPdf(file_id, { responseType: 'blob' });
                 return response.data;
             }
             catch (error) {

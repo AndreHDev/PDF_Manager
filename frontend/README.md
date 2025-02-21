@@ -49,5 +49,10 @@ export default tseslint.config({
 });
 ```
 
+
+openapi-generator-cli generate -i ../openapi/openapi.json -g typescript-axios -o src/api -> missing! npm install -g @openapitools/openapi-generator-cli -> missing java sudo apt install default-jre
+
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+nvm install node
+npm install
 npm run dev
-openapi-generator-cli generate -i ../openapi/openapi.json -g typescript-axios -o src/api

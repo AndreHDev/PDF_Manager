@@ -105,8 +105,8 @@ class PDF_Model():
                 img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
                 thumbnails.append(f"data:image/png;base64,{img_str}")
             return thumbnails
-        except Exception:
-            raise Exception
+        except Exception as e:
+            raise Exception (f"Error generating thumbnails: {str(e)}")
 
     
     def merge_selected_pages(self, pages: List[Page]) -> str:
