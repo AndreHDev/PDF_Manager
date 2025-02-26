@@ -52,7 +52,7 @@
   "/pdfs": {
    "post": {
     "summary": "Upload Pdf",
-    "description": "Uploads a PDF and returns its unique file_id.\n\nArgs:\n    file (UploadFile, optional): The PDF file to upload.\n\nReturns:\n    dict: A dictionary containing the file_id of the uploaded PDF.",
+    "description": "Uploads a PDF and saves each pages indivdualy as a pdf.\n\nArgs:\n    file (UploadFile, optional): The PDF file to upload.\n\nReturns:\n    dict:",
     "operationId": "upload_pdf",
     "requestBody": {
      "content": {
@@ -222,6 +222,10 @@
       "type": "string",
       "title": "File Id"
      },
+     "page_id": {
+      "type": "string",
+      "title": "Page Id"
+     },
      "page_number": {
       "type": "integer",
       "title": "Page Number"
@@ -239,6 +243,7 @@
     "type": "object",
     "required": [
      "file_id",
+     "page_id",
      "page_number",
      "thumbnail"
     ],

@@ -5,24 +5,30 @@ from io import BytesIO
 from typing import List
 import uuid
 import shutil
-from schemas import Page, Pdf
+from schemas import Page
 from fastapi import UploadFile
 import os
  
 
 class PDF_Model():
     def __init__(self):
-        self._pdfs: List[Pdf] = []
+        self._pages: List[Page] = []
     
     def get_pdf(self, pdf_id: str) -> Page:
-        for pdf in self._pdfs:
+        for pdf in self._pages:
             if pdf.file_id == pdf_id:
                 return pdf
         return None
     
-    def add_pdf(self, pdf: Pdf):
-        print(f"Adding PDF file {pdf.file_id} to backend. {len(pdf.pages)} pages. {type(pdf)}")
-        self._pdfs.append(pdf)
+    def add_page(self, page: Page):
+        print(f"Adding page {page.page_id} to backend. Type {type(page)}")
+        self._pages.append(page)
+
+    def get_pages(self) -> List[Page]:
+        return self._pages
+    
+    def remove_pages(self):
+        self._pages = []
 
     def add_pdf_file(self, file: UploadFile) -> str: #TODO better name?
         """
@@ -34,12 +40,11 @@ class PDF_Model():
         Returns:
             str: The id of the uploaded PDF file.
         """
-        pages:List[Page] = []
-        file_id = str(uuid.uuid4())
-
+        
         try:
             # Save the file temporarily
-            file_path = self.get_pdf_path(file_id)
+            file_id = str(uuid.uuid4())
+            file_path = self.generate_file_path(file_id)
             with open(file_path, "wb") as buffer:
                 shutil.copyfileobj(file.file, buffer)
                 print(f"Saved file to {file_path}")
@@ -49,46 +54,37 @@ class PDF_Model():
                 thumbnails = self.get_thumbnails(file_path)
             except Exception as e:
                 raise Exception(f"Error generating thumbnails: {str(e)}")
+            print(f"Generated thumbnails for {len(thumbnails)} pages")
 
-            # Create page for response
+            # Create page objects for each page in the PDF and save them to the backend
             reader = PdfReader(file_path)
             for i in range(len(reader.pages)):
-                new_page = Page(file_id=file_id, page_number=i + 1, thumbnail=thumbnails[i])
-                pages.append(new_page)
-            print(f"Extracted {len(pages)} pages from PDF file.")
+                print(f"Processing page {i + 1}")
+                page_id = str(uuid.uuid4())
+                new_page = Page(file_id=file_id, page_id=page_id, page_number=i + 1, thumbnail=thumbnails[i])
+                self.add_page(new_page)
+                # Save the page to the backend
+                page_path = self.generate_file_path(page_id)
+                with open(page_path, "wb") as f:
+                    writer = PdfWriter()
+                    writer.add_page(reader.pages[i])
+                    writer.write(f)
+                    print(f"Saved page to {page_path}")
+
+            # Remove the original file
+            os.remove(file_path)
+            print(f"Removed original file {file_path}")
 
         except Exception as e:
             raise Exception(f"Error processing PDF file: {str(e)}")
-        
-        self.add_pdf(Pdf(file_id=file_id, pages=pages))
 
-        print(f"Added PDF file {file_id} to backend.")
+        print(f"Done processing PDF file. Pages: {len(self.get_pages())}")
         return file_id
     
 
-    def get_pdf_pages(self, pdf_id: str) -> List[Page]:
-        """
-        Get all pages for a specific PDF file.
-
-        Args:
-            pdf_id (str): Id of the PDF file.
-
-        Returns:
-            List[Page]: List of Page objects.
-
-        Raises:
-            FileNotFoundError: Raised if the file is not found.
-        """
-        pdf = self.get_pdf(pdf_id)
-        if not pdf:
-            raise FileNotFoundError
-        
-        return pdf.pages
-
-
     def get_thumbnails(self, file_path: str) -> List[str]:
         """
-        Generate a small image to be used as a thumbnail for each page in the PDF file.
+        Generate a small image to be used as a thumbnail for each page in the given PDF file.
 
         Args:
             file_path (str): The path to the PDF file.
@@ -107,6 +103,28 @@ class PDF_Model():
             return thumbnails
         except Exception as e:
             raise Exception (f"Error generating thumbnails: {str(e)}")
+        
+    
+    def get_pdf_pages(self, file_id: str) -> List[Page]:
+        """
+        Get all pages for a specific PDF file.
+
+        Args:
+            pdf_id (str): Id of the PDF file.
+
+        Returns:
+            List[Page]: List of Page objects.
+
+        Raises:
+            FileNotFoundError: Raised if the file is not found.
+        """
+        pages = []
+        for page in self.get_pages():
+            if page.file_id == file_id:
+                pages.append(page)
+        if not pages:
+            raise FileNotFoundError
+        return pages
 
     
     def merge_selected_pages(self, pages: List[Page]) -> str:
@@ -137,12 +155,12 @@ class PDF_Model():
                 continue
             
             try:
-                pdf_page = self.get_page_in_pdf_format(page.file_id, page.page_number)
+                pdf_page = self.get_page_in_pdf_format(page.page_id)
                 writer.add_page(pdf_page)
             except FileNotFoundError:
-                raise FileNotFoundError(f"File {page.file_id} not found.") 
+                raise FileNotFoundError(f"File {page.page_id} not found.") 
             except IndexError:
-                raise IndexError(f"Page {page.page_number} not found in file {page.file_id}.")
+                raise IndexError(f"Page {page.page_number} not found in file {page.page_id}.")
             except Exception as e:
                 raise Exception(f"Error processing page {page.page_number}: {str(e)}")
 
@@ -150,7 +168,7 @@ class PDF_Model():
             raise ValueError("No pages were selected for merging.")
         
         file_id = str(uuid.uuid4())
-        output_file_path = self.get_pdf_path(file_id)
+        output_file_path = self.generate_file_path(file_id)
 
         # Write the merged file
         with open(output_file_path, "wb") as f:
@@ -159,13 +177,12 @@ class PDF_Model():
         return file_id
     
     
-    def get_page_in_pdf_format(self, file_id: str, page_number: int) -> PdfReader:
+    def get_page_in_pdf_format(self, file_id: str) -> PdfReader:
         """
         Load a page from a PDF file and return it in PdfReader format.
 
         Args:
             file_id (str): Id of file to load page from.
-            page_number (int): What page to load. Starts at 1.
 
         Returns:
             PdfReader: The page in PdfReader format.
@@ -174,14 +191,14 @@ class PDF_Model():
             FileNotFoundError: Raised if the file is not found.
             IndexError: Raised if the page is not found in the file.
         """
-        file_path = self.get_pdf_path(file_id)
+        page_path = self.generate_file_path(file_id)
         try:
-            reader = PdfReader(file_path)
+            reader = PdfReader(page_path)
         except FileNotFoundError:
             raise FileNotFoundError
         
         try:
-            page = reader.pages[page_number - 1]
+            page = reader.pages[0]
         except IndexError:
             raise IndexError
         
@@ -196,9 +213,11 @@ class PDF_Model():
                     os.remove(f"temp/{file}")
         except Exception as e:
             raise Exception(f"Error cleaning up temp folder: {str(e)}")
+        
+        self.remove_pages()
 
     
-    def get_pdf_path(self, pdf_id: str) -> str:
+    def generate_file_path(self, pdf_id: str) -> str:
         return f"temp/{pdf_id}.pdf"
 
 pdf_model_instance = PDF_Model()

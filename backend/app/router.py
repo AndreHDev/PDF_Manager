@@ -39,13 +39,13 @@ async def merge_pdfs(request: List[Page]):
 @fileRouter.post("/pdfs", response_model=dict)
 async def upload_pdf(file: UploadFile = File(...)):
     """
-    Uploads a PDF and returns its unique file_id.
+    Uploads a PDF and saves each pages indivdualy as a pdf.
 
     Args:
         file (UploadFile, optional): The PDF file to upload.
 
     Returns:
-        dict: A dictionary containing the file_id of the uploaded PDF.
+        dict: 
     """
     print("Received request to upload file!")
 
@@ -94,7 +94,7 @@ async def download_pdf(pdf_id: str):
     """
     print(f"Received request to download PDF: {pdf_id}")
 
-    pdf_path = pdf_model_instance.get_pdf_path(pdf_id)
+    pdf_path = pdf_model_instance.generate_file_path(pdf_id)
 
     if not os.path.exists(pdf_path):
         raise HTTPException(status_code=404, detail="PDF file not found")

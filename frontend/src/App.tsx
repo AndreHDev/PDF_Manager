@@ -29,10 +29,10 @@ const App = () => {
     fetchPages();
   }, []);
 
-  const handleCheckBoxChange = useCallback((fileId: string, pageNumber: number, checked: boolean) => {
+  const handleCheckBoxChange = useCallback((pageId: string, checked: boolean) => {
     // Search for given page and update its checked status
     setPages(prevPages => prevPages.map(page => {
-      if (page.file_id === fileId && page.page_number === pageNumber) {
+      if (page.page_id === pageId) {
         return {
           ...page,
           checked
@@ -42,10 +42,11 @@ const App = () => {
     }));
   }, []);
 
-  const handleSwapPages = useCallback((draggedPage: { fileId: string, pageNumber: number }, targetPage: { fileId: string, pageNumber: number }) => {
+  const handleSwapPages = useCallback((draggedPageId: string, targetPageId: string) => {
     setPages(prevPages => {
-      const draggedIndex = prevPages.findIndex(p => p.file_id === draggedPage.fileId && p.page_number === draggedPage.pageNumber);
-      const targetIndex = prevPages.findIndex(p => p.file_id === targetPage.fileId && p.page_number === targetPage.pageNumber);
+      const draggedIndex = prevPages.findIndex(p => p.page_id === draggedPageId);
+      const targetIndex = prevPages.findIndex(p => p.page_id === targetPageId);
+      console.log('Dragged index:', draggedIndex, 'Target index:', targetIndex);
       
       if (draggedIndex === -1 || targetIndex === -1) return prevPages;
       

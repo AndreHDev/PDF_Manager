@@ -50,6 +50,12 @@ export interface Page {
     'file_id': string;
     /**
      * 
+     * @type {string}
+     * @memberof Page
+     */
+    'page_id': string;
+    /**
+     * 
      * @type {number}
      * @memberof Page
      */
@@ -241,7 +247,7 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
-         * Uploads a PDF and returns its unique file_id.  Args:     file (UploadFile, optional): The PDF file to upload.  Returns:     dict: A dictionary containing the file_id of the uploaded PDF.
+         * Uploads a PDF and saves each pages indivdualy as a pdf.  Args:     file (UploadFile, optional): The PDF file to upload.  Returns:     dict:
          * @summary Upload Pdf
          * @param {File} file 
          * @param {*} [options] Override http request option.
@@ -343,7 +349,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * Uploads a PDF and returns its unique file_id.  Args:     file (UploadFile, optional): The PDF file to upload.  Returns:     dict: A dictionary containing the file_id of the uploaded PDF.
+         * Uploads a PDF and saves each pages indivdualy as a pdf.  Args:     file (UploadFile, optional): The PDF file to upload.  Returns:     dict:
          * @summary Upload Pdf
          * @param {File} file 
          * @param {*} [options] Override http request option.
@@ -405,7 +411,7 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
             return localVarFp.mergePdfs(page, options).then((request) => request(axios, basePath));
         },
         /**
-         * Uploads a PDF and returns its unique file_id.  Args:     file (UploadFile, optional): The PDF file to upload.  Returns:     dict: A dictionary containing the file_id of the uploaded PDF.
+         * Uploads a PDF and saves each pages indivdualy as a pdf.  Args:     file (UploadFile, optional): The PDF file to upload.  Returns:     dict:
          * @summary Upload Pdf
          * @param {File} file 
          * @param {*} [options] Override http request option.
@@ -472,7 +478,7 @@ export class DefaultApi extends BaseAPI {
     }
 
     /**
-     * Uploads a PDF and returns its unique file_id.  Args:     file (UploadFile, optional): The PDF file to upload.  Returns:     dict: A dictionary containing the file_id of the uploaded PDF.
+     * Uploads a PDF and saves each pages indivdualy as a pdf.  Args:     file (UploadFile, optional): The PDF file to upload.  Returns:     dict:
      * @summary Upload Pdf
      * @param {File} file 
      * @param {*} [options] Override http request option.

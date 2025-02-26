@@ -6,18 +6,18 @@ import ThumbnailItem from './ThumbnailItem';
 
 interface IProps {
     pages: Page[];
-    onCheckBoxChange: (fileId: string, pageNumber: number, checked: boolean ) => void;
-    swapPages: (draggedPage: { fileId: string, pageNumber: number }, targetPage: { fileId: string, pageNumber: number }) => void;
+    onCheckBoxChange: (pageId: string, checked: boolean ) => void;
+    swapPages: (draggedPageId: string, targetPageId: string) => void;
 }
 
 const ThumbnailGrid = ({ pages, onCheckBoxChange, swapPages }: IProps) => {
 
-    const [draggedPage, setDraggedPage] = useState<{ fileId: string, pageNumber: number } | null>(null);
+    const [draggedPage, setDraggedPage] = useState<{ pageId: string} | null>(null);
 
     console.log("Current Pages: ", pages);
 
-    const handleCheckboxChange = (fileId: string, pageNumber: number, checked: boolean) => {
-      onCheckBoxChange(fileId, pageNumber, checked);
+    const handleCheckboxChange = (pageId: string, checked: boolean) => {
+      onCheckBoxChange(pageId, checked);
     }
 
     const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
@@ -32,27 +32,27 @@ const ThumbnailGrid = ({ pages, onCheckBoxChange, swapPages }: IProps) => {
         return;
       }
       
-      const targetFileId = targetElement.getAttribute("data-file-id");
-      const targetPageNumber = parseInt(targetElement.getAttribute("data-page-number") || "-1", 10);
-      console.log("Target file ID", targetFileId, "Target page number", targetPageNumber, "Dragged page", draggedPage);
+      const targetPageId = targetElement.getAttribute("data-file-id");
+      
+      console.log("Target file ID", targetPageId, "Dragged page", draggedPage.pageId);
 
-      if (!targetFileId || targetPageNumber === -1) {
-        console.log("Invalid target file ID or page number");
+      if (!targetPageId) {
+        console.log("Invalid target pageId");
         return;
       }
 
-      if (draggedPage.fileId === targetFileId && draggedPage.pageNumber === targetPageNumber) {
+      if (draggedPage.pageId === targetPageId) {
         console.log("Same page, no need to move");
         return;
       }
 
       // Swap pages
-      swapPages(draggedPage, { fileId: targetFileId, pageNumber: targetPageNumber });
+      swapPages(draggedPage.pageId, targetPageId);
     }
 
-    const handleDragStart = (event: React.DragEvent<HTMLDivElement>, fileId: string, pageNumber: number) => {
-      console.log("Drag start", fileId, "Page: ", pageNumber, event);
-      setDraggedPage({ fileId, pageNumber });
+    const handleDragStart = (event: React.DragEvent<HTMLDivElement>, pageId: string) => {
+      console.log("Drag start", pageId, event);
+      setDraggedPage({ pageId });
     }
 
     return (
