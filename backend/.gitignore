@@ -1,4 +1,5 @@
 app/temp
+test/temp
 __pycache__/
 **/__pycache__/
 outputs/

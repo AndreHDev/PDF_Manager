@@ -2,7 +2,7 @@ from PyPDF2 import PdfReader, PdfWriter
 from pdf2image import convert_from_path
 import base64
 from io import BytesIO
-from typing import List
+from typing import List, Optional
 import uuid
 import shutil
 from schemas import Page
@@ -14,7 +14,7 @@ class PDF_Model():
     def __init__(self):
         self._pages: List[Page] = []
     
-    def get_pdf(self, pdf_id: str) -> Page:
+    def get_pdf(self, pdf_id: str) -> Optional[Page]:
         for pdf in self._pages:
             if pdf.file_id == pdf_id:
                 return pdf
