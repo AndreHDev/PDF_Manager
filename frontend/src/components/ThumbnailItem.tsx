@@ -15,7 +15,7 @@ const ThumbnailItem = ({ page, onDragStart, onCheckboxChange }: ThumbnailItemPro
         <div
         className="bg-custom-dark"
         draggable
-        data-file-id={page.page_id} 
+        data-page-id={page.page_id} 
         data-page-number={page.page_number}
         onDragStart={(event) => onDragStart(event, page_id)}
         >
