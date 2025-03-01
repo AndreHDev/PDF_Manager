@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import type { Page } from '../api/api';
-//import { createCanvas, loadImage } from 'canvas';
 import ThumbnailItem from './ThumbnailItem';
-
+import log from '../utils/logger';
 
 interface IProps {
     pages: Page[];
@@ -14,35 +13,36 @@ const ThumbnailGrid = ({ pages, onCheckBoxChange, insertPage: insertPage }: IPro
 
     const [draggedPage, setDraggedPage] = useState<{ pageId: string} | null>(null);
 
-    console.log("Current Pages: ", pages);
+    log.debug("Current Pages: ", pages);
 
     const handleCheckboxChange = (pageId: string, checked: boolean) => {
+      log.info("Checkbox change triggered", pageId, checked);
       onCheckBoxChange(pageId, checked);
     }
 
     const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
-      console.log("Drop event", event);
+      log.info("Drop event triggered");
       event.preventDefault();
 
       // Get the drop target from event
       const targetElement = (event.target as Element).closest("[data-file-id][data-page-number]");
 
       if (!draggedPage || !targetElement) {
-        console.log("Invalid drop target or no dragged page.");
+        log.error("Invalid drop target or no dragged page.");
         return;
       }
       
       const targetPageId = targetElement.getAttribute("data-file-id");
       
-      console.log("Target file ID", targetPageId, "Dragged page", draggedPage.pageId);
+      log.debug("Target file ID", targetPageId, "Dragged page", draggedPage.pageId);
 
       if (!targetPageId) {
-        console.log("Invalid target pageId");
+        log.info("Invalid target pageId");
         return;
       }
 
       if (draggedPage.pageId === targetPageId) {
-        console.log("Same page, no need to move");
+        log.info("Same page, no need to move");
         return;
       }
 
@@ -50,7 +50,7 @@ const ThumbnailGrid = ({ pages, onCheckBoxChange, insertPage: insertPage }: IPro
     }
 
     const handleDragStart = (event: React.DragEvent<HTMLDivElement>, pageId: string) => {
-      console.log("Drag start", pageId, event);
+      log.info("Drag start", pageId, event);
       setDraggedPage({ pageId });
     }
 

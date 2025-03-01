@@ -1,5 +1,6 @@
 import React from 'react';
 import type { Page } from '../api/api';
+import log from '../utils/logger';
 
 interface ThumbnailItemProps {
   page: Page;
@@ -18,7 +19,7 @@ const ThumbnailItem = ({ page, onDragStart, onCheckboxChange }: ThumbnailItemPro
         data-page-number={page.page_number}
         onDragStart={(event) => onDragStart(event, page_id)}
         >
-        <img src={thumbnail} alt={`Thumbnail ${page_number}`} className="w-full h-auto rounded-lg" onError={(e) => console.log('Image failed to load:', thumbnail, e)} />
+        <img src={thumbnail} alt={`Thumbnail ${page_number}`} className="w-full h-auto rounded-lg" onError={(e) => log.error('Image failed to load:', thumbnail, e)} />
         <input
             type="checkbox"
             checked={checked}

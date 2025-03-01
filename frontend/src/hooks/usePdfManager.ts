@@ -1,11 +1,13 @@
 import { useState, useCallback, useEffect } from "react";
 import type { Page } from "../api/api";
 import { api } from "../api/myApi";
+import log from "../utils/logger";
 
 export const usePdfManager = () => {
   const [pages, setPages] = useState<Page[]>([]);
 
   const getPdfPages = async (file_id: string) => {
+    log.info("Getting pages for file_id:", file_id);
     try {
       const response = await api.getPdfPages(file_id);
       return response.data;
@@ -16,12 +18,19 @@ export const usePdfManager = () => {
   };
 
   const handleUploadSuccess = useCallback(async (fileId: string) => {
+    log.info("Handle Upload success for file_id:", fileId);
     const newPages = await getPdfPages(fileId);
     setPages((prevPages) => [...prevPages, ...newPages]);
   }, []);
 
   const handleCheckboxChange = useCallback(
     (pageId: string, checked: boolean) => {
+      log.info(
+        "Handle Checkbox change for page: ",
+        pageId,
+        ", checked: ",
+        checked
+      );
       // Search for given page and update its checked status
       setPages((prevPages) =>
         prevPages.map((page) => {
@@ -31,6 +40,7 @@ export const usePdfManager = () => {
               checked,
             };
           }
+          log.debug("Updated page: ", { ...page, checked });
           return page;
         })
       );
@@ -41,21 +51,24 @@ export const usePdfManager = () => {
   const handleInsertPage = useCallback(
     (draggedPageId: string, targetPageId: string) => {
       setPages((prevPages) => {
+        log.info(
+          "Handle inserting page:",
+          draggedPageId,
+          "before page:",
+          targetPageId
+        );
         const draggedIndex = prevPages.findIndex(
           (p) => p.page_id === draggedPageId
         );
         const targetIndex = prevPages.findIndex(
           (p) => p.page_id === targetPageId
         );
-        console.log(
-          "Dragged index:",
-          draggedIndex,
-          "Target index:",
-          targetIndex
-        );
+        log.debug("Dragged index:", draggedIndex, "Target index:", targetIndex);
 
-        if (draggedIndex === -1 || targetIndex === -1) return prevPages;
-
+        if (draggedIndex === -1 || targetIndex === -1) {
+          log.error("Invalid dragged or target page index");
+          return prevPages;
+        }
         const newPages = [...prevPages];
 
         // Insert dragged page before target page
@@ -69,6 +82,7 @@ export const usePdfManager = () => {
   );
 
   useEffect(() => {
+    log.info("Setting up cleanup on window unload");
     const cleanup = async () => await api.cleanUpTempFiles();
 
     window.addEventListener("beforeunload", cleanup);

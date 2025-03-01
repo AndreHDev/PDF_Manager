@@ -2,6 +2,7 @@
 import { useEffect} from 'react';
 import {useDropzone} from 'react-dropzone';
 import { api } from '../api/myApi';
+import log from '../utils/logger';
 
 interface IProps {
   onUploadSuccess: (fileid: string ) => void;
@@ -19,14 +20,15 @@ function UploadDialog({onUploadSuccess}: IProps) {
   useEffect(() => {
     
     const uploadFile = async (file:File) => {
+      log.debug('Uploading file:', file);
       try {
         const response = await api.uploadPdf(file);
-        console.log(response);
+        log.debug('Upload response:', response);
         if (response.data && (response.data as { file_id: string })) {
           onUploadSuccess((response.data as { file_id: string }).file_id);
         }
       } catch (error) {
-        console.error('Error uploading files:', error);
+        log.error('Error uploading files:', error);
       }
     }
 

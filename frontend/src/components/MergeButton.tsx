@@ -1,5 +1,6 @@
 import { api } from '../api/myApi';
 import type { Page } from '../api/api';
+import log from '../utils/logger';
 
 interface MergeButtonProps {
     pages: Page[];
@@ -8,6 +9,7 @@ interface MergeButtonProps {
 const MergeButton = ({ pages }: MergeButtonProps) => {
     
     const handleMerge = async () => {
+        log.info('Handle merge of pages:', pages);
         // Merge the PDFs
         const mergePdfs = async (pages: Page[]) => {
             try {
@@ -16,23 +18,27 @@ const MergeButton = ({ pages }: MergeButtonProps) => {
                 return mergedPdfId;
             }
             catch (error) {
-                console.error('Error merging PDFs:', error);
+                log.error('Error merging PDFs:', error);
                 return [];
             }
         };
 
         const mergedPdfId = await mergePdfs(pages);
-        console.log("New file_id of merged file:", mergedPdfId);
-        if (typeof mergedPdfId !== 'string') return;
+        log.info("Merging done. New file_id of merged file:", mergedPdfId);
+        if (typeof mergedPdfId !== 'string') {
+            log.error('Invalid merged file_id:', mergedPdfId);
+            return;
+        }
 
         // Get the merged PDF
         const getMergedPdf = async (file_id: string) => {
+            log.info('Getting merged PDF:', file_id);
             try {
                 const response = await api.downloadPdf(file_id, { responseType: 'blob' });
                 return response.data;
             }
             catch (error) {
-                console.error('Error getting merged PDF:', error);
+                log.error('Error getting merged PDF:', error);
                 return [];
             }
         };
