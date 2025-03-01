@@ -1,0 +1,31 @@
+2025-03-01 18:19:55,633 - my_app - INFO - Received request to clean up temporary files!
+2025-03-01 18:19:55,633 - my_app - INFO - Cleaning up temp folder
+2025-03-01 18:19:55,633 - my_app - INFO - Successfully cleaned up temporary files
+2025-03-01 18:19:55,893 - my_app - INFO - Received request to clean up temporary files!
+2025-03-01 18:19:55,893 - my_app - INFO - Cleaning up temp folder
+2025-03-01 18:19:55,893 - my_app - INFO - Successfully cleaned up temporary files
+2025-03-01 18:20:26,128 - INFO - Received request to clean up temporary files!
+2025-03-01 18:20:26,128 - INFO - Cleaning up temp folder
+2025-03-01 18:20:26,129 - INFO - Successfully cleaned up temporary files
+2025-03-01 18:21:03,441 - INFO - Received request to clean up temporary files!
+2025-03-01 18:21:03,442 - INFO - Cleaning up temp folder
+2025-03-01 18:21:03,442 - INFO - Successfully cleaned up temporary files
+2025-03-01 18:21:08,895 - INFO - Received request to upload PDF: merged_output (22).pdf!
+2025-03-01 18:21:08,895 - INFO - Saved given pdf file to temp/047aa96f-fb63-4beb-8fa4-e3cbbc120dad.pdf
+2025-03-01 18:21:09,020 - INFO - Generated thumbnails for 1 pages
+2025-03-01 18:21:09,020 - INFO - Processing page 1
+2025-03-01 18:21:09,033 - INFO - Saved page to temp/3cf28a18-66c7-4ef3-ba46-8011542ec606.pdf
+2025-03-01 18:21:09,033 - INFO - Removed original file at temp/047aa96f-fb63-4beb-8fa4-e3cbbc120dad.pdf
+2025-03-01 18:21:09,034 - INFO - Done processing PDF file. Pages: 1
+2025-03-01 18:21:09,034 - INFO - Successfully uploaded PDF with id: 047aa96f-fb63-4beb-8fa4-e3cbbc120dad
+2025-03-01 18:21:09,040 - INFO - Received request to get pages for PDF with id: 047aa96f-fb63-4beb-8fa4-e3cbbc120dad!
+2025-03-01 18:21:09,040 - INFO - Successfully fetched 1 pages for PDF with id: 047aa96f-fb63-4beb-8fa4-e3cbbc120dad
+2025-03-01 18:21:11,420 - INFO - Received request to merge 1 pages!
+2025-03-01 18:21:11,420 - INFO - Merging 1
+2025-03-01 18:21:11,432 - INFO - Done merging pages. File id of merged file: a3762fa7-a323-4029-a753-c1d5751f8bd3
+2025-03-01 18:21:11,432 - INFO - Successfully merged pages into file with id: a3762fa7-a323-4029-a753-c1d5751f8bd3
+2025-03-01 18:21:11,486 - INFO - Received request to download PDF with id: a3762fa7-a323-4029-a753-c1d5751f8bd3!
+2025-03-01 18:21:11,486 - INFO - Successfully responded with downloadable PDF with id: a3762fa7-a323-4029-a753-c1d5751f8bd3
+2025-03-01 18:21:17,205 - INFO - Received request to clean up temporary files!
+2025-03-01 18:21:17,205 - INFO - Cleaning up temp folder
+2025-03-01 18:21:17,205 - INFO - Successfully cleaned up temporary files

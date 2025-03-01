@@ -3,8 +3,8 @@ from schemas import Page
 from fastapi import UploadFile, File, APIRouter, HTTPException
 from fastapi.responses import FileResponse
 from typing import List
-from starlette.background import BackgroundTasks
 import os
+from logger import logger
 
 fileRouter = APIRouter()
 
@@ -19,7 +19,7 @@ async def merge_pdfs(request: List[Page]):
     Returns:
         dict: A dictionary containing the file_id of the merged PDF.
     """
-    print("Received request to merge PDFs!")
+    logger.info(f"Received request to merge {len(request)} pages!")
 
     try:
         merged_file_id = pdf_model_instance.merge_selected_pages(request)
@@ -31,8 +31,8 @@ async def merge_pdfs(request: List[Page]):
         raise HTTPException(status_code=404, detail=str(ie))
     except Exception as e: # Everything else
         raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
-    print(f"Merged PDF file_id: {merged_file_id}")
-
+    
+    logger.info(f"Successfully merged pages into file with id: {merged_file_id}")
     return {"file_id": merged_file_id}
 
 
@@ -47,14 +47,15 @@ async def upload_pdf(file: UploadFile = File(...)):
     Returns:
         dict: 
     """
-    print("Received request to upload file!")
+    logger.info(f"Received request to upload PDF: {file.filename}!")
 
     try:
         file_id = pdf_model_instance.add_pdf_file(file)
     except Exception as e:
-        print(f"Error uploading file: {str(e)}")
+        logger.error(f"Error uploading file: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
     
+    logger.info(f"Successfully uploaded PDF with id: {file_id}")
     return {"file_id": file_id}
 
 
@@ -69,16 +70,17 @@ async def get_pdf_pages(file_id: str):
     Returns:
         List[Page]: A list of Page objects for the given PDF.
     """
-    print(f"Fetching pages for PDF: {file_id}")
+    logger.info(f"Received request to get pages for PDF with id: {file_id}!")
 
     try:
         pages = pdf_model_instance.get_pdf_pages(file_id)
     except FileNotFoundError:
         raise HTTPException(status_code=404, detail="PDF file not found")
     except Exception as e:
-        print(f"Error fetching pages: {str(e)}")
+        logger.error(f"Error fetching pages for pdf with id {file_id}: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
-
+    
+    logger.info(f"Successfully fetched {len(pages)} pages for PDF with id: {file_id}")
     return pages
 
 
@@ -92,13 +94,14 @@ async def download_pdf(pdf_id: str):
     Returns:
         FileResponse: The PDF file for download.
     """
-    print(f"Received request to download PDF: {pdf_id}")
+    logger.info(f"Received request to download PDF with id: {pdf_id}!")
 
     pdf_path = pdf_model_instance.generate_file_path(pdf_id)
 
     if not os.path.exists(pdf_path):
         raise HTTPException(status_code=404, detail="PDF file not found")
 
+    logger.info(f"Successfully responded with downloadable PDF with id: {pdf_id}")
     return FileResponse(pdf_path, filename=f"{pdf_id}.pdf")
 
 
@@ -110,11 +113,12 @@ async def clean_up_temp_files():
     Returns:
         dict: A message indicating the cleanup was successful.
     """
-    print("Received request to clean up temporary files!")
+    logger.info("Received request to clean up temporary files!")
 
     try:
         pdf_model_instance.clean_up()
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
+    
+    logger.info("Successfully cleaned up temporary files")
     return {"message": "Temporary files cleaned up successfully"}
