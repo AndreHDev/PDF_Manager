@@ -10,12 +10,6 @@ interface IProps {
 
 function UploadDialog({onUploadSuccess}: IProps) {
   const {acceptedFiles, getRootProps, getInputProps} = useDropzone();
-  
-  const files = acceptedFiles.map(file => (
-    <li key={file.path}>
-      {file.path} - {file.size} bytes
-    </li>
-  ));
 
   useEffect(() => {
     
@@ -47,7 +41,6 @@ function UploadDialog({onUploadSuccess}: IProps) {
       </div>
       <aside>
         <h4>Files</h4>
-        <ul>{files}</ul>
       </aside>
     </section>
   );
