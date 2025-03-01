@@ -42,7 +42,7 @@ const App = () => {
     }));
   }, []);
 
-  const handleSwapPages = useCallback((draggedPageId: string, targetPageId: string) => {
+  const handleInsertPage = useCallback((draggedPageId: string, targetPageId: string) => {
     setPages(prevPages => {
       const draggedIndex = prevPages.findIndex(p => p.page_id === draggedPageId);
       const targetIndex = prevPages.findIndex(p => p.page_id === targetPageId);
@@ -51,8 +51,10 @@ const App = () => {
       if (draggedIndex === -1 || targetIndex === -1) return prevPages;
       
       const newPages = [...prevPages];
-      // Swap the pages
-      [newPages[draggedIndex], newPages[targetIndex]] = [newPages[targetIndex], newPages[draggedIndex]];
+      
+      // Insert dragged page before target page
+      const [draggedPage] = newPages.splice(draggedIndex, 1);
+      newPages.splice(targetIndex, 0, draggedPage);
       
       return newPages;
     });
@@ -77,7 +79,7 @@ const App = () => {
     <div className="p-6 w-full max-w-6xl mx-auto bg-custom-dark min-h-screen flex flex-col">
       <h1 className="text-2xl font-bold mb-4">PDF Merge App</h1>
       <UploadDialog onUploadSuccess={handleUploadSuccess}/>
-      <ThumbnailGrid pages={pages} onCheckBoxChange={handleCheckBoxChange} swapPages={handleSwapPages} />
+      <ThumbnailGrid pages={pages} onCheckBoxChange={handleCheckBoxChange} insertPage={handleInsertPage} />
       <MergeButton pages={pages} />
     </div>
   );

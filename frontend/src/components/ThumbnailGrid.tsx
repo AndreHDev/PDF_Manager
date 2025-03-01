@@ -7,10 +7,10 @@ import ThumbnailItem from './ThumbnailItem';
 interface IProps {
     pages: Page[];
     onCheckBoxChange: (pageId: string, checked: boolean ) => void;
-    swapPages: (draggedPageId: string, targetPageId: string) => void;
+    insertPage: (draggedPageId: string, targetPageId: string) => void;
 }
 
-const ThumbnailGrid = ({ pages, onCheckBoxChange, swapPages }: IProps) => {
+const ThumbnailGrid = ({ pages, onCheckBoxChange, insertPage: insertPage }: IProps) => {
 
     const [draggedPage, setDraggedPage] = useState<{ pageId: string} | null>(null);
 
@@ -46,8 +46,7 @@ const ThumbnailGrid = ({ pages, onCheckBoxChange, swapPages }: IProps) => {
         return;
       }
 
-      // Swap pages
-      swapPages(draggedPage.pageId, targetPageId);
+      insertPage(draggedPage.pageId, targetPageId);
     }
 
     const handleDragStart = (event: React.DragEvent<HTMLDivElement>, pageId: string) => {
