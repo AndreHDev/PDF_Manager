@@ -6,7 +6,7 @@ Handles logging for the application. Uncomment the file_handler to log to a file
 
 # Create a logger
 logger = logging.getLogger("my_app")
-logger.setLevel(logging.INFO)  # Set desired logging level here!
+logger.setLevel(logging.DEBUG)  # Set desired logging level here!
 
 # Create handlers
 console_handler = logging.StreamHandler()

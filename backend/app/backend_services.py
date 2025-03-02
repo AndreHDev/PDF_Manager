@@ -10,6 +10,8 @@ from fastapi import UploadFile
 import os
 from logger import logger
 
+TEMP_FOLDER = "/backend/app/temp"
+
 class PDF_Model():
     def __init__(self):
         self._pages: List[Page] = []
@@ -25,7 +27,7 @@ class PDF_Model():
         self._pages.append(page)
 
     def get_pages(self) -> List[Page]:
-        logger.debug(f"Getting all pages from backend, Total: {len(self._pages)}, Pages: {self._pages}")
+        logger.debug(f"Getting all pages from backend, Total: {len(self._pages)}")
         return self._pages
     
     def remove_pages(self):
@@ -218,10 +220,12 @@ class PDF_Model():
         """
         logger.info("Cleaning up temp folder")
         try:
-            for file in os.listdir("temp"):
+            logger.debug(f"Files in temp folder: {os.listdir(TEMP_FOLDER)}")
+            for file in os.listdir(TEMP_FOLDER):
                 if file.endswith(".pdf"):
-                    os.remove(f"temp/{file}")
+                    os.remove(f"{TEMP_FOLDER}/{file}")
         except Exception as e:
+            logger.exception("Error cleaning up temp folder")
             raise Exception(f"Error cleaning up temp folder: {str(e)}")
         
         self.remove_pages()
@@ -237,6 +241,6 @@ class PDF_Model():
             str: The file path.
         """
         logger.debug(f"Generating file path for {pdf_id}")
-        return f"temp/{pdf_id}.pdf"
+        return f"{TEMP_FOLDER}/{pdf_id}.pdf"
 
 pdf_model_instance = PDF_Model()

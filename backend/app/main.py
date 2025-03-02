@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_utils import openapi
-from backend import PDF_Model
+from backend_services import PDF_Model
 from router import fileRouter
 
 app = FastAPI()
