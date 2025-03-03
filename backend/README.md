@@ -4,11 +4,6 @@ This is the backend service for the PDF Manager application. It is built using F
 
 ## Setup
 
-### Prerequisites
-
-- Python 3.11
-- Conda
-
 ### Install and Run using Docker
 
 1. Build the Docker image:
@@ -23,7 +18,12 @@ This is the backend service for the PDF Manager application. It is built using F
     docker run -p 8000:8000 pdf-manager-backend
     ```
 
-### Manual Install and Run the Backend
+### Manualy Install and Run the Backend
+
+### Prerequisites
+
+- Python 3.11
+- Conda
 
 1. Create a virtual environment:
 
