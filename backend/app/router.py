@@ -50,7 +50,7 @@ async def upload_pdf(file: UploadFile = File(...)):
     logger.info(f"Received request to upload PDF: {file.filename}!")
 
     try:
-        file_id = pdf_model_instance.add_pdf_file(file)
+        file_id = pdf_model_instance.upload_pdf_file(file)
     except Exception as e:
         logger.error(f"Error uploading file: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))

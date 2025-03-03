@@ -6,7 +6,7 @@ import os
 import sys
 from PyPDF2 import PdfReader
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../app')))
-from backend import PDF_Model
+from backend_services import PDF_Model
 
 class Test_Backend(unittest.TestCase):
     def setUp(self):
@@ -18,15 +18,13 @@ class Test_Backend(unittest.TestCase):
         self.addCleanup(self.cleanup)
 
     def cleanup(self):
-        for file in os.listdir("temp"):
-            if file.endswith(".pdf"):
-                os.remove(f"temp/{file}")
+        self.model.clean_up()
 
-    def test_add_pdf_file_one_page(self):
+    def test_upload_pdf_file_one_page(self):
         with open(self.one_page_pdf, 'rb') as f:
             file_content = f.read()
         file = UploadFile(filename='OnePage.pdf', file=BytesIO(file_content))
-        file_id = self.model.add_pdf_file(file)
+        file_id = self.model.upload_pdf_file(file)
         self.assertEqual(len(self.model.get_pages()), 1,
             msg="Expected 1 page to be added to the model")
         self.assertEqual(self.model.get_pages()[0].file_id, file_id,
@@ -38,11 +36,11 @@ class Test_Backend(unittest.TestCase):
         self.assertEqual(self.model.get_pages()[0].checked, True,
             msg="Expected the checked attribute to be True by default")
         
-    def test_add_pdf_file_three_pages(self):
+    def test_upload_pdf_file_three_pages(self):
         with open(self.three_page_pdf, 'rb') as f:
             file_content = f.read()
         file = UploadFile(filename='ThreePages.pdf', file=BytesIO(file_content))
-        file_id = self.model.add_pdf_file(file)
+        file_id = self.model.upload_pdf_file(file)
         self.assertEqual(len(self.model.get_pages()), 3,
             msg="Expected 3 pages to be added to the backend")
         for i in range(3):
@@ -55,16 +53,16 @@ class Test_Backend(unittest.TestCase):
             self.assertEqual(self.model.get_pages()[i].checked, True,
                 msg="Expected the checked attribute to be True by default")
             
-    def test_add_pdf_file_multiple_files(self):
+    def test_upload_pdf_file_multiple_files(self):
         with open(self.one_page_pdf, 'rb') as f:
             file_content = f.read()
         file = UploadFile(filename='OnePage.pdf', file=BytesIO(file_content))
-        one_page_file_id = self.model.add_pdf_file(file)
+        one_page_file_id = self.model.upload_pdf_file(file)
 
         with open(self.three_page_pdf, 'rb') as f:
             file_content = f.read()
         file = UploadFile(filename='ThreePages.pdf', file=BytesIO(file_content))
-        three_page_file_id = self.model.add_pdf_file(file)
+        three_page_file_id = self.model.upload_pdf_file(file)
 
         self.assertEqual(len(self.model.get_pages()), 4,
             msg=f"Expected 4 pages to be added to the backend, got {len(self.model.get_pages())}")
@@ -112,16 +110,16 @@ class Test_Backend(unittest.TestCase):
         with open(self.three_page_pdf, 'rb') as f:
             file_content = f.read()
         file = UploadFile(filename='ThreePages.pdf', file=BytesIO(file_content))
-        file_id = self.model.add_pdf_file(file)
+        file_id = self.model.upload_pdf_file(file)
 
         with open(self.one_page_pdf, 'rb') as f:
             file_content = f.read()
         file = UploadFile(filename='OnePage.pdf', file=BytesIO(file_content))
-        file_id = self.model.add_pdf_file(file)
+        file_id = self.model.upload_pdf_file(file)
 
         merged_file_id = self.model.merge_selected_pages(self.model.get_pages())
 
-        reader = PdfReader("temp/" + merged_file_id + ".pdf")
+        reader = PdfReader(self.model.generate_file_path(merged_file_id))
         text_pages = []
         for page in reader.pages:
             text_pages.append(page.extract_text())
@@ -141,17 +139,17 @@ class Test_Backend(unittest.TestCase):
         with open(self.three_page_pdf, 'rb') as f:
             file_content = f.read()
         file = UploadFile(filename='ThreePages.pdf', file=BytesIO(file_content))
-        file_id = self.model.add_pdf_file(file)
+        file_id = self.model.upload_pdf_file(file)
 
         with open(self.one_page_pdf, 'rb') as f:
             file_content = f.read()
         file = UploadFile(filename='OnePage.pdf', file=BytesIO(file_content))
-        file_id = self.model.add_pdf_file(file)
+        file_id = self.model.upload_pdf_file(file)
 
         self.model.get_pages()[0].checked = False
         merged_file_id = self.model.merge_selected_pages(self.model.get_pages())
 
-        reader = PdfReader("temp/" + merged_file_id + ".pdf")
+        reader = PdfReader(self.model.generate_file_path(merged_file_id))
         text_pages = []
         for page in reader.pages:
             text_pages.append(page.extract_text())

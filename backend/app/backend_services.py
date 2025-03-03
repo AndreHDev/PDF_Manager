@@ -9,9 +9,7 @@ from schemas import Page
 from fastapi import UploadFile
 import os
 from logger import logger
-from pathlib import Path
-
-TEMP_FOLDER = Path(__file__).resolve().parent / "temp"
+from config import TEMP_FOLDER
 
 class PDF_Model():
     def __init__(self):
@@ -35,7 +33,7 @@ class PDF_Model():
         logger.debug(f"Removing all pages from backend")
         self._pages = []
 
-    def add_pdf_file(self, file: UploadFile) -> str: #TODO better name?
+    def upload_pdf_file(self, file: UploadFile) -> str: #TODO better name?
         """
         Add a PDF file to the backend and extract all pages from it. Save the file temporarily in /temp.
 
