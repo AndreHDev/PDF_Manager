@@ -84,25 +84,25 @@ async def get_pdf_pages(file_id: str):
     return pages
 
 
-@fileRouter.get("/pdfs/{pdf_id}/download")
-async def download_pdf(pdf_id: str):
+@fileRouter.get("/pdfs/{file_id}/download")
+async def download_pdf(file_id: str):
     """
     Gets a PDf file for download by its file_id
     Args:
-        pdf_id (str): The file_id of the PDF to download.
+        file_id (str): The file_id of the PDF to download.
 
     Returns:
         FileResponse: The PDF file for download.
     """
-    logger.info(f"Received request to download PDF with id: {pdf_id}!")
+    logger.info(f"Received request to download PDF with id: {file_id}!")
 
-    pdf_path = pdf_model_instance.generate_file_path(pdf_id)
+    pdf_path = pdf_model_instance.generate_file_path(file_id)
 
     if not os.path.exists(pdf_path):
         raise HTTPException(status_code=404, detail="PDF file not found")
 
-    logger.info(f"Successfully responded with downloadable PDF with id: {pdf_id}")
-    return FileResponse(pdf_path, filename=f"{pdf_id}.pdf")
+    logger.info(f"Successfully responded with downloadable PDF with id: {file_id}")
+    return FileResponse(pdf_path, filename=f"{file_id}.pdf")
 
 
 @fileRouter.delete("/pdfs")

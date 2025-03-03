@@ -9,8 +9,9 @@ from schemas import Page
 from fastapi import UploadFile
 import os
 from logger import logger
+from pathlib import Path
 
-TEMP_FOLDER = "/backend/app/temp"
+TEMP_FOLDER = Path(__file__).resolve().parent / "temp"
 
 class PDF_Model():
     def __init__(self):
