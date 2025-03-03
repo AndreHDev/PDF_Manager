@@ -35,4 +35,4 @@ To run this project locally using Docker, follow these steps:
   
 ### Manual Installation
 
-If you want to manually install the application refer to the READ.ME files in the frontend and backend folders respectively.
+If you want to manually install the application refer to the README.md files in the frontend and backend folders respectively.
