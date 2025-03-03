@@ -2,8 +2,6 @@
 
 This project is a web application that allows users to upload PDF files, merge them, reorder pages, and select specific pages to include in the final document.  
 
-- **Frontend:** Built with TypeScript  
-- **Backend:** Built with Python  
 
 ## Features  
 ✔ Upload multiple PDF files  
