@@ -3,6 +3,7 @@ import { useEffect} from 'react';
 import {useDropzone} from 'react-dropzone';
 import { api } from '../api/myApi';
 import log from '../utils/logger';
+import './UploadDialog.css';
 
 interface IProps {
   onUploadSuccess: (fileid: string ) => void;
@@ -37,11 +38,9 @@ function UploadDialog({onUploadSuccess}: IProps) {
     <section className="container">
       <div {...getRootProps({className: 'dropzone'})}>
         <input {...getInputProps()} />
-        <p>Drag 'n' drop some files here, or click to select files</p>
+        <div className="plus-sign">+</div>
+        <p>Drag 'n' drop some files here, or click to select files.</p>
       </div>
-      <aside>
-        <h4>Files</h4>
-      </aside>
     </section>
   );
 }
