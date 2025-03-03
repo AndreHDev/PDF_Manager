@@ -1,58 +1,56 @@
-# React + TypeScript + Vite
+# PDF Manager Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the frontend service for the PDF Manager application.
 
-Currently, two official plugins are available:
+## Setup
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Install and Run using Docker
 
-## Expanding the ESLint configuration
+1. Build the Docker image:
+    ```sh
+    docker build -t pdf-manager-frontend .
+    ```
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+2. Run the Docker container:
+    ```sh
+    docker run -p 3000:80 pdf-manager-frontend
+    ```
 
-- Configure the top-level `parserOptions` property like this:
+### Manualy Install and Run the Backend
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-});
-```
+1. Install Java (required for OpenAPI Generator):
+    ```sh
+    sudo apt install default-jre
+    ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+2. Install Node Version Manager (NVM):
+    ```sh
+    wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+    ```
 
-```js
-// eslint.config.js
-import react from "eslint-plugin-react";
+3. Install Node.js using NVM:
+    ```sh
+    nvm install node
+    ```
+4. Install dependencies:
+    ```sh
+    npm install
+    ```
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: "18.3" } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs["jsx-runtime"].rules,
-  },
-});
-```
+5. Start the development server:
+    ```sh
+    npm run dev
 
+## API
 
-openapi-generator-cli generate -i ../openapi/openapi.json -g typescript-axios -o src/api -> missing! npm install -g @openapitools/openapi-generator-cli -> missing java sudo apt install default-jre
+If you want to update the API code you will need to install OpenAPI Generator CLI:
 
-wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
-nvm install node
-npm install
-npm run dev
+1. Install OpenAPI Generator CLI:
+    ```sh
+    npm install -g @openapitools/openapi-generator-cli
+    ```
+
+2. Auto-generate API code from OpenAPI specification:
+    ```sh
+    openapi-generator-cli generate -i ../openapi/openapi.json -g typescript-axios -o src/api
+    ```
