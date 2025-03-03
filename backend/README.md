@@ -58,16 +58,3 @@ This is the backend service for the PDF Manager application. It is built using F
 ## Endpoints
 
 - Checkout the docs at http://localhost:8000/docs
-
-## Project Structure
-
-- [app/]: Contains the main application code.
-  - [main.py]: Entry point for the FastAPI application.
-  - [generate_openapi.py]: Script to generate the OpenAPI schema. Used to auto generate API code for frontend.
-  - [schemas.py]: Pydantic models for request and response validation.
-  - [router.py]: Defines the API routes.
-  - [backend_services.py]: Contains the core logic for handling PDF files.
-  - [logger.py]: Configures logging for the application.
-- [tests/]: Contains unit tests for the application.
-- [requirements.txt]: Lists the Python dependencies.
-- [Dockerfile]: Dockerfile for containerizing the application.
