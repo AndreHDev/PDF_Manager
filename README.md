@@ -26,7 +26,7 @@ To run this project locally using Docker, follow these steps:
 
 2. **Start the application using Docker Compose:**  
    ```sh
-   docker-compose up --build
+   docker compose up --build
    ```
 
 3. **Access the application:**  
