@@ -74,7 +74,7 @@ class PDF_Model():
                     writer.write(f)
                     logger.info(f"Saved page to {page_path}")
 
-            # Remove the original file
+            # Remove the original file TODO: Security risk? Check file path string, check if file is actually pdf
             os.remove(file_path)
             logger.info(f"Removed original file at {file_path}")
 
