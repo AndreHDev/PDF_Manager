@@ -33,7 +33,7 @@ class PDF_Model():
         logger.debug(f"Removing all pages from backend")
         self._pages = []
 
-    def upload_pdf_file(self, file: UploadFile) -> str: #TODO better name?
+    def upload_pdf_file(self, file: UploadFile) -> str:
         """
         Add a PDF file to the backend and extract all pages from it. Save the file temporarily in /temp.
 
@@ -74,7 +74,7 @@ class PDF_Model():
                     writer.write(f)
                     logger.info(f"Saved page to {page_path}")
 
-            # Remove the original file TODO: Security risk? Check file path string, check if file is actually pdf
+            # Remove the original file TODO: Security risk? Check if file is actually pdf?
             os.remove(file_path)
             logger.info(f"Removed original file at {file_path}")
 
@@ -184,12 +184,12 @@ class PDF_Model():
         return file_id
     
     
-    def get_page_in_pdf_format(self, file_id: str) -> PdfReader:
+    def get_page_in_pdf_format(self, id: str) -> PdfReader:
         """
         Load a page from a PDF file and return it in PdfReader format.
 
         Args:
-            file_id (str): Id of file to load page from.
+            id (str): Id of page to load.
 
         Returns:
             PdfReader: The page in PdfReader format.
@@ -198,8 +198,8 @@ class PDF_Model():
             FileNotFoundError: Raised if the file is not found.
             IndexError: Raised if the page is not found in the file.
         """
-        logger.debug(f"Getting page in PDF format for file {file_id}")
-        page_path = self.generate_file_path(file_id)
+        logger.debug(f"Getting page in PDF format for file {id}")
+        page_path = self.generate_file_path(id)
         try:
             reader = PdfReader(page_path)
         except FileNotFoundError:

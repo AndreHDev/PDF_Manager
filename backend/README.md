@@ -8,15 +8,15 @@ This is the backend service for the PDF Manager application. It is built using F
 
 1. Build the Docker image:
 
-    ```sh
-    docker build -t pdf-manager-backend .
-    ```
+   ```sh
+   docker build -t pdf-manager-backend .
+   ```
 
 2. Run the Docker container:
 
-    ```sh
-    docker run -p 8000:8000 pdf-manager-backend
-    ```
+   ```sh
+   docker run -p 8000:8000 pdf-manager-backend
+   ```
 
 ### Manualy Install and Run the Backend
 
@@ -27,34 +27,34 @@ This is the backend service for the PDF Manager application. It is built using F
 
 1. Create a virtual environment:
 
-    ```sh
-    python3 -m venv venv
-    ```
+   ```sh
+   python3 -m venv venv
+   ```
 
 2. Activate the virtual environment:
 
-    ```sh
-    source venv/bin/activate
-    ```
+   ```sh
+   source venv/bin/activate
+   ```
 
 3. Install the required dependencies:
 
-    ```sh
-    pip install -r requirements.txt
-    ```
+   ```sh
+   pip install -r requirements.txt
+   ```
 
 4. Install Poppler utils if missing (required for PDF processing):
 
-    ```sh
-    conda install -c conda-forge poppler
-    ```
+   ```sh
+   conda install -c conda-forge poppler
+   ```
 
-5. Start the server with:
+5. From the /App directory, start the server with:
 
-    ```sh
-    uvicorn app.main:app --reload
-    ```
-    
+   ```sh
+   uvicorn main:app --reload
+   ```
+
 ## Endpoints
 
 - Checkout the docs at http://localhost:8000/docs
