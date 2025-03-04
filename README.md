@@ -2,6 +2,8 @@
 
 This project is a web application that allows users to upload PDF files, merge them, reorder pages, and select specific pages to include in the final document.  
 
+![PDF_Manager_Preview](https://github.com/user-attachments/assets/22e89bfe-bcb5-483f-8cd5-653c581da0ee)
+
 
 ## Features  
 ✔ Upload multiple PDF files  
