@@ -10,6 +10,6 @@
   left: -10px;
   width: 4px;
   border-radius: 8px;
-  background-color: rgba(126,29,251); 
+  background-color: rgba(126, 29, 251);
   pointer-events: none; /* Prevents the indicator from interfering with drag events */
 }

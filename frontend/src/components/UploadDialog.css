@@ -1,18 +1,18 @@
 .dropzone {
-    border: 2px dashed black;
-    border-radius: 15px;
-    padding: 20px;
-    text-align: center;
-    position: relative;
-    height: 110px;
-  }
-  
+  border: 2px dashed black;
+  border-radius: 15px;
+  padding: 20px;
+  text-align: center;
+  position: relative;
+  height: 110px;
+}
+
 .plus-sign {
-    font-size: 48px;
-    color: black;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    bottom: 4px;
-    transform: translate(-50%, -50%);
+  font-size: 48px;
+  color: black;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  bottom: 4px;
+  transform: translate(-50%, -50%);
 }

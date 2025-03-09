@@ -2,25 +2,17 @@ import { useState } from "react";
 import log from "../utils/logger";
 
 export const useDragAndDrop = (
-  insertPage: (draggedPageId: string, targetPageId: string) => void
+  insertPage: (draggedPageId: string, targetPageId: string) => void,
 ) => {
-  const [draggedPage, setDraggedPage] = useState<{ pageId: string } | null>(
-    null
-  );
+  const [draggedPage, setDraggedPage] = useState<{ pageId: string } | null>(null);
   const [targetPageId, setTargetPageId] = useState<string | null>(null);
 
-  const handleDragStart = (
-    event: React.DragEvent<HTMLDivElement>,
-    pageId: string
-  ) => {
+  const handleDragStart = (event: React.DragEvent<HTMLDivElement>, pageId: string) => {
     log.info("Drag start", pageId, event);
     setDraggedPage({ pageId });
   };
 
-  const handleDragOver = (
-    event: React.DragEvent<HTMLDivElement>,
-    pageId: string
-  ) => {
+  const handleDragOver = (event: React.DragEvent<HTMLDivElement>, pageId: string) => {
     event.preventDefault();
     setTargetPageId(pageId);
   };
@@ -42,12 +34,7 @@ export const useDragAndDrop = (
       return;
     }
 
-    log.debug(
-      "Target pageId",
-      curTargetPageId,
-      "Dragged page",
-      draggedPage.pageId
-    );
+    log.debug("Target pageId", curTargetPageId, "Dragged page", draggedPage.pageId);
 
     if (!curTargetPageId) {
       log.info("Invalid target pageId");

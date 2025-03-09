@@ -46,9 +46,7 @@ describe("useDragAndDrop Hook", () => {
     const event = {
       preventDefault: jest.fn(),
       target: {
-        closest: jest
-          .fn()
-          .mockReturnValue({ getAttribute: () => "targetPageId" }),
+        closest: jest.fn().mockReturnValue({ getAttribute: () => "targetPageId" }),
       },
     } as unknown as React.DragEvent<HTMLDivElement>;
 
@@ -85,9 +83,7 @@ describe("useDragAndDrop Hook", () => {
     const event = {
       preventDefault: jest.fn(),
       target: {
-        closest: jest
-          .fn()
-          .mockReturnValue({ getAttribute: () => "draggedPageId" }),
+        closest: jest.fn().mockReturnValue({ getAttribute: () => "draggedPageId" }),
       },
     } as unknown as React.DragEvent<HTMLDivElement>;
 

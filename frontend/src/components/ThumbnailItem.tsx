@@ -1,6 +1,6 @@
-import React from 'react';
-import type { Page } from '../api/api';
-import log from '../utils/logger';
+import React from "react";
+import type { Page } from "../api/api";
+import log from "../utils/logger";
 
 interface ThumbnailItemProps {
   page: Page;
@@ -9,24 +9,29 @@ interface ThumbnailItemProps {
 }
 
 const ThumbnailItem = ({ page, onDragStart, onCheckboxChange }: ThumbnailItemProps) => {
-    const { page_id, thumbnail, page_number, checked } = page;
+  const { page_id, thumbnail, page_number, checked } = page;
 
-    return (
-        <div
-        className="bg-custom-dark"
-        draggable
-        data-page-id={page.page_id} 
-        data-page-number={page.page_number}
-        onDragStart={(event) => onDragStart(event, page_id)}
-        >
-        <img src={thumbnail} alt={`Thumbnail ${page_number}`} className="w-full h-auto rounded-lg" onError={(e) => log.error('Image failed to load:', thumbnail, e)} />
-        <input
-            type="checkbox"
-            checked={checked}
-            onChange={(e) => onCheckboxChange(page_id, e.target.checked)}
-        />
-        </div>
-    );
+  return (
+    <div
+      className="bg-custom-dark"
+      draggable
+      data-page-id={page.page_id}
+      data-page-number={page.page_number}
+      onDragStart={(event) => onDragStart(event, page_id)}
+    >
+      <img
+        src={thumbnail}
+        alt={`Thumbnail ${page_number}`}
+        className="w-full h-auto rounded-lg"
+        onError={(e) => log.error("Image failed to load:", thumbnail, e)}
+      />
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={(e) => onCheckboxChange(page_id, e.target.checked)}
+      />
+    </div>
+  );
 };
 
 export default ThumbnailItem;

@@ -23,63 +23,43 @@ export const usePdfManager = () => {
     setPages((prevPages) => [...prevPages, ...newPages]);
   }, []);
 
-  const handleCheckboxChange = useCallback(
-    (pageId: string, checked: boolean) => {
-      log.info(
-        "Handle Checkbox change for page: ",
-        pageId,
-        ", checked: ",
-        checked
-      );
-      // Search for given page and update its checked status
-      setPages((prevPages) =>
-        prevPages.map((page) => {
-          if (page.page_id === pageId) {
-            return {
-              ...page,
-              checked,
-            };
-          }
-          log.debug("Updated page: ", { ...page, checked });
-          return page;
-        })
-      );
-    },
-    []
-  );
-
-  const handleInsertPage = useCallback(
-    (draggedPageId: string, targetPageId: string) => {
-      setPages((prevPages) => {
-        log.info(
-          "Handle inserting page:",
-          draggedPageId,
-          "before page:",
-          targetPageId
-        );
-        const draggedIndex = prevPages.findIndex(
-          (p) => p.page_id === draggedPageId
-        );
-        const targetIndex = prevPages.findIndex(
-          (p) => p.page_id === targetPageId
-        );
-        log.debug("Dragged index:", draggedIndex, "Target index:", targetIndex);
-
-        if (draggedIndex === -1 || targetIndex === -1) {
-          log.error("Invalid dragged or target page index");
-          return prevPages;
+  const handleCheckboxChange = useCallback((pageId: string, checked: boolean) => {
+    log.info("Handle Checkbox change for page: ", pageId, ", checked: ", checked);
+    // Search for given page and update its checked status
+    setPages((prevPages) =>
+      prevPages.map((page) => {
+        if (page.page_id === pageId) {
+          return {
+            ...page,
+            checked,
+          };
         }
-        const newPages = [...prevPages];
+        log.debug("Updated page: ", { ...page, checked });
+        return page;
+      }),
+    );
+  }, []);
 
-        // Insert dragged page before target page
-        const [draggedPage] = newPages.splice(draggedIndex, 1);
-        newPages.splice(targetIndex, 0, draggedPage);
+  const handleInsertPage = useCallback((draggedPageId: string, targetPageId: string) => {
+    setPages((prevPages) => {
+      log.info("Handle inserting page:", draggedPageId, "before page:", targetPageId);
+      const draggedIndex = prevPages.findIndex((p) => p.page_id === draggedPageId);
+      const targetIndex = prevPages.findIndex((p) => p.page_id === targetPageId);
+      log.debug("Dragged index:", draggedIndex, "Target index:", targetIndex);
 
-        return newPages;
-      });
-    },
-    []
-  );
+      if (draggedIndex === -1 || targetIndex === -1) {
+        log.error("Invalid dragged or target page index");
+        return prevPages;
+      }
+      const newPages = [...prevPages];
+
+      // Insert dragged page before target page
+      const [draggedPage] = newPages.splice(draggedIndex, 1);
+      newPages.splice(targetIndex, 0, draggedPage);
+
+      return newPages;
+    });
+  }, []);
 
   useEffect(() => {
     log.info("Setting up cleanup on window unload");
